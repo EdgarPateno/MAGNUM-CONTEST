@@ -303,6 +303,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
     radial-gradient(42rem 30rem at 8% 92%,rgba(110,139,255,0.16),transparent 66%);
   pointer-events:none;
 }
+/* Sits above the grid so it labels the whole hero, not just the left column */
+.hero__eyebrow{
+  margin-bottom:clamp(2rem,4.5vw,3.5rem);
+}
+
 .hero__grid{
   display:grid;
   grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);
@@ -999,10 +1004,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 <!-- ======================= HERO ======================= -->
 <section class="hero" id="top">
   <div class="wrap">
+    <p class="eyebrow eyebrow--light hero__eyebrow">Magnum Nutraceuticals · New protein · Contest</p>
+
     <div class="hero__grid">
 
       <div>
-        <p class="eyebrow eyebrow--light">Magnum Nutraceuticals · New protein · Contest</p>
         <h1>Name<br>our next<em>protein.</em></h1>
         <p class="hero__lede">
           We built a new protein. It doesn't have a name yet. Give it one, and if our judges
