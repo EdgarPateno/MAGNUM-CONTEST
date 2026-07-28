@@ -351,37 +351,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 }
 .npn svg{width:0.9rem;height:0.9rem;stroke:var(--green);fill:none;stroke-width:2.2;flex:none}
 
-/* Fact strip */
-.facts{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  border-top:1px solid rgba(255,255,255,0.13);
-  margin-top:clamp(3rem,6vw,5rem);
-}
-@media(max-width:760px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.fact{
-  padding:1.6rem 1.4rem;
-  border-right:1px solid rgba(255,255,255,0.13);
-  text-align:center;
-}
-.fact:last-child{border-right:0}
-@media(max-width:760px){
-  .fact:nth-child(2n){border-right:0}
-  .fact:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,0.13)}
-}
-.fact__k{
-  font-family:var(--label);
-  font-size:clamp(1.75rem,3.6vw,2.6rem);
-  font-weight:900;line-height:1;letter-spacing:-0.01em;
-  color:var(--paper);
-}
-.fact__k small{font-size:0.5em;font-weight:700;color:var(--blue-lift);margin-left:0.2em}
-.fact__v{
-  margin-top:0.5rem;font-size:0.6875rem;font-weight:600;
-  letter-spacing:0.15em;text-transform:uppercase;color:var(--n-500);
-  line-height:1.4;
-}
-
 /* --------------------------------------------------------------------------
    TUB — the signature. Live label preview.
    -------------------------------------------------------------------------- */
@@ -537,7 +506,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .tub__name{
   font-family:var(--label);font-weight:900;
   font-size:2.2rem;                 /* JS rescales this to fit the panel */
-  line-height:0.92;letter-spacing:0.005em;
+  line-height:0.92;
+  /* Open tracking so a short name still spans the panel — tight spacing made
+     it read as though the label was waiting for more letters. */
+  letter-spacing:0.12em;
+  text-indent:0.12em;               /* balance the trailing letter-space */
   text-transform:uppercase;color:#fff;
   white-space:nowrap;
   transition:color .35s var(--ease);
@@ -656,15 +629,29 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   margin-top:clamp(2.5rem,5vw,3.5rem);
 }
 @media(max-width:700px){.spec{grid-template-columns:1fr}}
-.spec__i{background:var(--paper);padding:1.9rem 1.6rem}
+/* Flex column + margin-top:auto on the label bottom-aligns every label
+   across the row, so differing key sizes don't stagger them. */
+.spec__i{
+  background:var(--paper);padding:1.9rem 1.6rem;
+  display:flex;flex-direction:column;
+}
 .spec__k{
   font-family:var(--label);font-weight:900;
   font-size:clamp(2.2rem,4.6vw,3rem);line-height:1;letter-spacing:-0.015em;
 }
 .spec__k small{font-size:0.42em;font-weight:700;color:var(--blue);margin-left:0.15em}
+/* Labels carry the message here, so they're sized to hold their own against
+   the numeral rather than sitting under it as fine print. */
 .spec__v{
-  margin-top:0.6rem;font-size:0.6875rem;font-weight:600;
-  letter-spacing:0.15em;text-transform:uppercase;color:var(--n-700);
+  margin-top:auto;padding-top:0.9rem;
+  font-family:var(--label);font-weight:900;
+  font-size:clamp(1.15rem,2.1vw,1.5rem);line-height:1.05;
+  letter-spacing:0.02em;text-transform:uppercase;color:var(--ink);
+}
+/* Word-based key ("Lactose free") needs less size than a two-glyph numeral
+   to occupy the same optical width. */
+.spec__k--text{
+  font-size:clamp(1.6rem,3.1vw,2.1rem);letter-spacing:-0.005em;
 }
 
 /* Protein sources — the doc says "in order of inclusion", so the bar
@@ -1088,25 +1075,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
     </div>
 
-    <!-- Fact strip -->
-    <div class="facts">
-      <div class="fact">
-        <p class="fact__k">$1,000<small>CAD</small></p>
-        <p class="fact__v">Approx. retail value</p>
-      </div>
-      <div class="fact">
-        <p class="fact__k">14</p>
-        <p class="fact__v">Two-pound tubs<br>= one year's supply</p>
-      </div>
-      <div class="fact">
-        <p class="fact__k">1</p>
-        <p class="fact__v">Winner, chosen on skill<br>— no random draw</p>
-      </div>
-      <div class="fact">
-        <p class="fact__k">CA<small>excl. QC</small></p>
-        <p class="fact__v">Age of majority<br>in your province</p>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -1225,12 +1193,12 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         <p class="spec__v">Protein per scoop</p>
       </div>
       <div class="spec__i">
-        <p class="spec__k">0<small>g</small></p>
-        <p class="spec__v">Lactose — lactose free</p>
+        <p class="spec__k spec__k--text">Lactose free</p>
+        <p class="spec__v">Non-vegan</p>
       </div>
       <div class="spec__i">
         <p class="spec__k">Full</p>
-        <p class="spec__v">Amino acid profile · BCAAs</p>
+        <p class="spec__v">Amino acid profile &#183; BCAAs</p>
       </div>
     </div>
 
@@ -1721,7 +1689,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
     // is the real content length. Compare those two rather than the panel's
     // clientHeight, which would wrongly include padding. Measuring the stack
     // also accounts for QUATTRO, which shares the panel when switched on.
-    var size = Math.round(panel.clientWidth * 0.38);
+    // Start from the largest size the panel's WIDTH can take (the rotated
+    // line's thickness), then shrink until its LENGTH fits too. Short names
+    // grow to fill instead of floating in the middle of the panel, which is
+    // what made them read as "room for more letters".
+    var size = Math.floor(panel.clientWidth / 1.15);
     el.style.fontSize = size + 'px';
     while (stack.scrollHeight > stack.clientHeight && size > 7){
       size -= 1;
@@ -1757,7 +1729,18 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
       // Only the visible follow-up is required.
       whyYes.required = yes;
       whyNo.required  = !yes;
+      // QUATTRO shares the panel with the name, so the name has to be
+      // refitted whenever it appears or disappears.
+      paintName();
       validate();
+    });
+  });
+
+  // QUATTRO animates its width over 0.5s; refit once it has settled, or the
+  // measurement above lands mid-transition and under-shrinks the name.
+  tubQuats.forEach(function(el){
+    el.addEventListener('transitionend', function(e){
+      if (e.propertyName === 'max-width') paintName();
     });
   });
 
