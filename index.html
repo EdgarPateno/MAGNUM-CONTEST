@@ -490,27 +490,34 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .tub__stack{
   position:relative;z-index:1;margin:0;
   writing-mode:vertical-rl;transform:rotate(180deg);
-  /* NOT flex. As flex items QUATTRO and the name were laid out as two
-     parallel columns; as inline content they flow as one continuous
-     vertical line, so QUATTRO reads directly above the name. */
-  display:block;text-align:center;white-space:nowrap;
+  /* Two parallel columns: QUATTRO runs alongside the name, in its own
+     column, the way a secondary line sits on real packaging. */
+  /* flex-direction:column follows the BLOCK axis, which in vertical-rl is
+     horizontal — that is what puts QUATTRO in its own column beside the
+     name. `row` follows the inline axis and stacked them end-to-end. */
+  display:flex;flex-direction:column;align-items:flex-end;justify-content:center;
 }
 .tub__quattro{
-  display:inline;vertical-align:middle;
+  /* flex:none — as a shrinkable item it collapsed to a couple of px when
+     the name grew. Spacing is a margin, not a flex gap, so it collapses
+     together with the word when switched off. align-self sets its position
+     along the panel's length; it must be set here because it would
+     otherwise inherit the container's align-items. */
+  flex:none;align-self:flex-end;
   font-family:var(--label);font-weight:900;
   font-size:5cqw;letter-spacing:0.16em;
   text-transform:uppercase;color:rgba(255,255,255,0.62);
-  margin-inline-start:3.5cqw;
+  margin-block-end:2.5cqw;
   transition:font-size .45s var(--ease),opacity .4s var(--ease),
-             margin-inline-start .45s var(--ease);
+             margin-block-end .45s var(--ease);
 }
 /* font-size:0 collapses it on BOTH axes, so it leaves no gap when switched
    off. max-width only collapsed its thickness, leaving its length behind. */
-.tub__quattro[data-on="false"]{font-size:0;opacity:0;margin-inline-start:0}
+.tub__quattro[data-on="false"]{font-size:0;opacity:0;margin-block-end:0}
 
 /* The proposed name — the whole point of the page */
 .tub__name{
-  display:inline;vertical-align:middle;
+  flex:none;align-self:center;
   font-family:var(--label);font-weight:900;
   font-size:2.2rem;                 /* JS rescales this to fit the panel */
   line-height:0.92;
@@ -1066,8 +1073,8 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
             <div class="tub__panel">
               <p class="tub__stack">
-                <span class="tub__name is-empty" id="tubName">Your name here</span>
                 <span class="tub__quattro" id="tubQuattro" data-on="false">Quattro</span>
+                <span class="tub__name is-empty" id="tubName">Your name here</span>
               </p>
               <span class="tub__mix">Protein drink mix<br>Boisson prot&#233;in&#233;e</span>
             </div>
@@ -1455,8 +1462,8 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
                 <div class="tub__panel">
                   <p class="tub__stack">
-                    <span class="tub__name is-empty" id="tubName2">Your name here</span>
                     <span class="tub__quattro" id="tubQuattro2" data-on="false">Quattro</span>
+                    <span class="tub__name is-empty" id="tubName2">Your name here</span>
                   </p>
                   <span class="tub__mix">Protein drink mix<br>Boisson prot&#233;in&#233;e</span>
                 </div>
@@ -1687,22 +1694,25 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
     var stack = el.closest('.tub__stack');
     if (!panel || !stack || panel.clientWidth <= 0) return;
 
-    // NOTE: do not use scrollHeight here. The stack is writing-mode:
-    // vertical-rl, so its text overflows along the INLINE (vertical) axis,
-    // which scrollHeight — being physical — does not report. It read
-    // 330 == 330 while the name inside was 1832px tall. Bounding rects are
-    // writing-mode agnostic, so measure those instead.
-    var pcs   = getComputedStyle(panel);
-    var avail = panel.clientHeight
-              - parseFloat(pcs.paddingTop || 0)
-              - parseFloat(pcs.paddingBottom || 0);
-    if (avail <= 0) return;
+    // NOTE: do not use scrollHeight. The stack is writing-mode vertical-rl,
+    // so text overflows along the INLINE (vertical) axis, which scrollHeight
+    // — being physical — does not report. Bounding rects are writing-mode
+    // agnostic. QUATTRO sits in a parallel column, so the name is bounded by
+    // the panel's LENGTH and by the width left over beside QUATTRO.
+    var pcs = getComputedStyle(panel);
+    var availLen   = panel.clientHeight
+                   - parseFloat(pcs.paddingTop || 0)
+                   - parseFloat(pcs.paddingBottom || 0);
+    var availThick = panel.clientWidth
+                   - parseFloat(pcs.paddingLeft || 0)
+                   - parseFloat(pcs.paddingRight || 0);
+    if (availLen <= 0 || availThick <= 0) return;
 
-    // Start from the largest size the panel's WIDTH allows (the rotated
-    // line's thickness), then shrink until the stack's LENGTH fits too.
     var size = Math.floor(panel.clientWidth / 1.15);
     el.style.fontSize = size + 'px';
-    while (stack.getBoundingClientRect().height > avail && size > 7){
+    for (var i = 0; i < 400 && size > 7; i++){
+      var r = stack.getBoundingClientRect();
+      if (r.height <= availLen && r.width <= availThick) break;
       size -= 1;
       el.style.fontSize = size + 'px';
     }
