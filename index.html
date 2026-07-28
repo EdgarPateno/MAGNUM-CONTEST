@@ -490,39 +490,32 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .tub__stack{
   position:relative;z-index:1;margin:0;
   writing-mode:vertical-rl;transform:rotate(180deg);
-  /* row-reverse puts QUATTRO above the name once the 180deg flip is applied.
-     No gap here — the spacing lives on QUATTRO so it collapses with it. */
-  display:flex;flex-direction:row-reverse;align-items:center;
+  /* NOT flex. As flex items QUATTRO and the name were laid out as two
+     parallel columns; as inline content they flow as one continuous
+     vertical line, so QUATTRO reads directly above the name. */
+  display:block;text-align:center;white-space:nowrap;
 }
 .tub__quattro{
-  /* flex:none is essential — as a shrinkable flex item it collapsed to a
-     couple of pixels when the name grew, instead of forcing the name down. */
-  flex:none;
+  display:inline;vertical-align:middle;
   font-family:var(--label);font-weight:900;
   font-size:5cqw;letter-spacing:0.16em;
   text-transform:uppercase;color:rgba(255,255,255,0.62);
-  margin-inline-end:2.5cqw;
+  margin-inline-start:3.5cqw;
   transition:font-size .45s var(--ease),opacity .4s var(--ease),
-             margin-inline-end .45s var(--ease);
+             margin-inline-start .45s var(--ease);
 }
 /* font-size:0 collapses it on BOTH axes, so it leaves no gap when switched
    off. max-width only collapsed its thickness, leaving its length behind. */
-.tub__quattro[data-on="false"]{font-size:0;opacity:0;margin-inline-end:0}
+.tub__quattro[data-on="false"]{font-size:0;opacity:0;margin-inline-start:0}
 
 /* The proposed name — the whole point of the page */
 .tub__name{
-  /* Like QUATTRO, must not shrink: a compressed flex box would report the
-     stack as fitting while the text itself overflowed and got clipped. */
-  flex:none;
+  display:inline;vertical-align:middle;
   font-family:var(--label);font-weight:900;
   font-size:2.2rem;                 /* JS rescales this to fit the panel */
   line-height:0.92;
-  /* Open tracking so a short name still spans the panel — tight spacing made
-     it read as though the label was waiting for more letters. */
   letter-spacing:0.12em;
-  text-indent:0.12em;               /* balance the trailing letter-space */
   text-transform:uppercase;color:#fff;
-  white-space:nowrap;
   transition:color .35s var(--ease);
 }
 .tub__name.is-empty{color:rgba(255,255,255,0.34)}
@@ -1073,8 +1066,8 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
             <div class="tub__panel">
               <p class="tub__stack">
-                <span class="tub__quattro" id="tubQuattro" data-on="false">Quattro</span>
                 <span class="tub__name is-empty" id="tubName">Your name here</span>
+                <span class="tub__quattro" id="tubQuattro" data-on="false">Quattro</span>
               </p>
               <span class="tub__mix">Protein drink mix<br>Boisson prot&#233;in&#233;e</span>
             </div>
@@ -1462,8 +1455,8 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
                 <div class="tub__panel">
                   <p class="tub__stack">
-                    <span class="tub__quattro" id="tubQuattro2" data-on="false">Quattro</span>
                     <span class="tub__name is-empty" id="tubName2">Your name here</span>
+                    <span class="tub__quattro" id="tubQuattro2" data-on="false">Quattro</span>
                   </p>
                   <span class="tub__mix">Protein drink mix<br>Boisson prot&#233;in&#233;e</span>
                 </div>
