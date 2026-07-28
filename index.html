@@ -490,20 +490,30 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .tub__stack{
   position:relative;z-index:1;margin:0;
   writing-mode:vertical-rl;transform:rotate(180deg);
-  display:flex;align-items:center;gap:2cqw;
-  max-height:100%;
+  /* row-reverse puts QUATTRO above the name once the 180deg flip is applied.
+     No gap here — the spacing lives on QUATTRO so it collapses with it. */
+  display:flex;flex-direction:row-reverse;align-items:center;
 }
 .tub__quattro{
+  /* flex:none is essential — as a shrinkable flex item it collapsed to a
+     couple of pixels when the name grew, instead of forcing the name down. */
+  flex:none;
   font-family:var(--label);font-weight:900;
   font-size:5cqw;letter-spacing:0.16em;
   text-transform:uppercase;color:rgba(255,255,255,0.62);
-  max-width:1.4em;overflow:hidden;
-  transition:max-width .5s var(--ease),opacity .4s var(--ease),margin .5s var(--ease);
+  margin-inline-end:2.5cqw;
+  transition:font-size .45s var(--ease),opacity .4s var(--ease),
+             margin-inline-end .45s var(--ease);
 }
-.tub__quattro[data-on="false"]{max-width:0;opacity:0;margin-inline:-1cqw}
+/* font-size:0 collapses it on BOTH axes, so it leaves no gap when switched
+   off. max-width only collapsed its thickness, leaving its length behind. */
+.tub__quattro[data-on="false"]{font-size:0;opacity:0;margin-inline-end:0}
 
 /* The proposed name — the whole point of the page */
 .tub__name{
+  /* Like QUATTRO, must not shrink: a compressed flex box would report the
+     stack as fitting while the text itself overflowed and got clipped. */
+  flex:none;
   font-family:var(--label);font-weight:900;
   font-size:2.2rem;                 /* JS rescales this to fit the panel */
   line-height:0.92;
@@ -1682,20 +1692,24 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   function fitName(el){
     var panel = el.closest('.tub__panel');
     var stack = el.closest('.tub__stack');
-    if (!panel || !stack) return;
-    if (panel.clientWidth <= 0) return;
-    // .tub__stack is max-height:100%, so its clientHeight is the space
-    // actually available inside the panel's padding box, while scrollHeight
-    // is the real content length. Compare those two rather than the panel's
-    // clientHeight, which would wrongly include padding. Measuring the stack
-    // also accounts for QUATTRO, which shares the panel when switched on.
-    // Start from the largest size the panel's WIDTH can take (the rotated
-    // line's thickness), then shrink until its LENGTH fits too. Short names
-    // grow to fill instead of floating in the middle of the panel, which is
-    // what made them read as "room for more letters".
+    if (!panel || !stack || panel.clientWidth <= 0) return;
+
+    // NOTE: do not use scrollHeight here. The stack is writing-mode:
+    // vertical-rl, so its text overflows along the INLINE (vertical) axis,
+    // which scrollHeight — being physical — does not report. It read
+    // 330 == 330 while the name inside was 1832px tall. Bounding rects are
+    // writing-mode agnostic, so measure those instead.
+    var pcs   = getComputedStyle(panel);
+    var avail = panel.clientHeight
+              - parseFloat(pcs.paddingTop || 0)
+              - parseFloat(pcs.paddingBottom || 0);
+    if (avail <= 0) return;
+
+    // Start from the largest size the panel's WIDTH allows (the rotated
+    // line's thickness), then shrink until the stack's LENGTH fits too.
     var size = Math.floor(panel.clientWidth / 1.15);
     el.style.fontSize = size + 'px';
-    while (stack.scrollHeight > stack.clientHeight && size > 7){
+    while (stack.getBoundingClientRect().height > avail && size > 7){
       size -= 1;
       el.style.fontSize = size + 'px';
     }
@@ -1740,7 +1754,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   // measurement above lands mid-transition and under-shrinks the name.
   tubQuats.forEach(function(el){
     el.addEventListener('transitionend', function(e){
-      if (e.propertyName === 'max-width') paintName();
+      if (e.propertyName === 'font-size') paintName();
     });
   });
 
