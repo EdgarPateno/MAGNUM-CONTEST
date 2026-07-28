@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Name Our New Protein — Magnum Nutraceuticals Contest</title>
+<meta name="description" content="Magnum is launching a new protein powder. Name it, and win a year's supply. Open to residents of Canada excluding Quebec who have reached the age of majority. No purchase necessary.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800;900&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   MAGNUM — "NAME OUR NEW PROTEIN" CONTEST LANDING PAGE
+   Standalone review build. Not a Shopify template — nothing here is pushed.
+
+   Design tokens are lifted from the live Magnum theme (#187048755503):
+     assets/magnum-home-sections.css  -> #072eaa, #f9f8f4, weight 900 titles,
+                                         uppercase eyebrows @ 0.08em
+     config/settings_data.json        -> buttons_radius 0, inputs_radius 0,
+                                         #121212 ink, #334FB4 blue variant
+     assets/magnum-heading-line-height.css -> section titles line-height 0.88
+   Zero border-radius is a brand constraint, not a stylistic default.
+   ========================================================================== */
+
+:root{
+  /* Core brand */
+  --ink:#0a0a0a;
+  --ink-raise:#171717;
+  --carbon:#242833;
+  --cream:#f9f8f4;
+  --paper:#ffffff;
+  --blue:#072eaa;
+  --blue-deep:#051f74;
+  --blue-lift:#6e8bff;
+  --blue-mist:#9fb6e8;
+  --gold:#f5c518;
+  --gold-deep:#ffbd1a;
+  --green:#4aa875;
+  --red:#d8483c;
+
+  /* Neutrals */
+  --n-100:#f0f0f0;
+  --n-300:#c9cdd4;
+  --n-500:#9aa1ab;
+  --n-700:#46464b;
+  --n-800:#3a3a3e;
+
+  /* Type roles */
+  --display:'Archivo',system-ui,sans-serif;   /* headings — theme uses wt 900 */
+  --body:'Barlow',system-ui,sans-serif;       /* UI/body — Proxima Nova analog */
+  --label:'Barlow Condensed',system-ui,sans-serif; /* tub label + data */
+
+  /* Spatial rhythm */
+  --gut:clamp(1.25rem,5vw,4.5rem);
+  --sec-y:clamp(5rem,11vw,9.5rem);
+  --max:80rem;
+
+  /* Motion */
+  --ease:cubic-bezier(0.32,0.72,0,1);
+  --ease-out:cubic-bezier(0.22,1,0.36,1);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:1.0625rem;
+  font-weight:400;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+img,svg{display:block;max-width:100%}
+
+/* --------------------------------------------------------------------------
+   Type scale
+   -------------------------------------------------------------------------- */
+h1,h2,h3,h4{
+  font-family:var(--display);
+  font-weight:900;
+  letter-spacing:-0.03em;   /* theme's -2px at display sizes */
+  line-height:0.9;
+  margin:0;
+  text-wrap:balance;
+}
+
+.eyebrow{
+  font-family:var(--body);
+  font-size:0.75rem;
+  font-weight:600;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--blue);
+  margin:0 0 1rem;
+  display:flex;
+  align-items:center;
+  gap:0.7rem;
+}
+.eyebrow::before{
+  content:"";
+  width:2rem;
+  height:2px;
+  background:var(--blue);
+  flex:none;
+}
+.eyebrow--light{color:var(--blue-lift)}
+.eyebrow--light::before{background:var(--blue-lift)}
+
+.sec-title{font-size:clamp(2.25rem,5.4vw,4.25rem)}
+.sec-sub{
+  max-width:44ch;
+  margin:1.4rem 0 0;
+  font-size:1.0625rem;
+  line-height:1.65;
+  color:var(--n-700);
+}
+.on-dark .sec-sub{color:var(--n-300)}
+
+/* --------------------------------------------------------------------------
+   Layout primitives
+   -------------------------------------------------------------------------- */
+.wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--gut)}
+
+.section{padding-block:var(--sec-y)}
+.section--dark{background:var(--ink);color:var(--paper)}
+.section--cream{background:var(--cream)}
+.section--paper{background:var(--paper)}
+
+.on-dark{color:var(--paper)}
+
+/* Machined enclosure — the "double bezel", squared off for Magnum.
+   Outer tray + inner plate, concentric only in inset, never in radius. */
+.tray{
+  background:rgba(10,10,10,0.04);
+  border:1px solid rgba(10,10,10,0.09);
+  padding:0.5rem;
+}
+.tray__plate{
+  background:var(--paper);
+  border:1px solid rgba(10,10,10,0.07);
+  height:100%;
+}
+.on-dark .tray{
+  background:rgba(255,255,255,0.035);
+  border-color:rgba(255,255,255,0.10);
+}
+.on-dark .tray__plate{
+  background:var(--ink-raise);
+  border-color:rgba(255,255,255,0.07);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* --------------------------------------------------------------------------
+   Buttons — squared, per theme buttons_radius:0
+   -------------------------------------------------------------------------- */
+.btn{
+  --btn-bg:var(--ink);
+  --btn-fg:var(--paper);
+  display:inline-flex;
+  align-items:center;
+  gap:0.75rem;
+  padding:1rem 1.25rem 1rem 1.6rem;
+  min-height:3.25rem;
+  background:var(--btn-bg);
+  color:var(--btn-fg);
+  border:1px solid var(--btn-bg);
+  border-radius:0;
+  font-family:var(--body);
+  font-size:0.875rem;
+  font-weight:600;
+  letter-spacing:0.11em;
+  text-transform:uppercase;
+  text-decoration:none;
+  cursor:pointer;
+  transition:background .45s var(--ease),color .45s var(--ease),
+             border-color .45s var(--ease),transform .3s var(--ease);
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0) scale(0.985)}
+
+/* Trailing icon nested in its own square well */
+.btn__well{
+  width:1.875rem;
+  height:1.875rem;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,0.14);
+  flex:none;
+  transition:transform .45s var(--ease),background .45s var(--ease);
+}
+.btn:hover .btn__well{transform:translate(3px,-1px);background:rgba(255,255,255,0.24)}
+.btn__well svg{width:0.875rem;height:0.875rem;stroke:currentColor;fill:none;stroke-width:2}
+
+.btn--gold{--btn-bg:var(--gold);--btn-fg:var(--ink)}
+.btn--gold .btn__well{background:rgba(10,10,10,0.14)}
+.btn--gold:hover .btn__well{background:rgba(10,10,10,0.24)}
+.btn--gold:hover{--btn-bg:var(--gold-deep)}
+
+.btn--blue{--btn-bg:var(--blue);--btn-fg:var(--paper)}
+.btn--blue:hover{--btn-bg:var(--blue-deep)}
+
+.btn--ghost{
+  --btn-bg:transparent;--btn-fg:var(--paper);
+  border-color:rgba(255,255,255,0.28);
+}
+.btn--ghost:hover{--btn-bg:rgba(255,255,255,0.08)}
+
+.btn[disabled],.btn[aria-disabled="true"]{
+  opacity:0.34;cursor:not-allowed;transform:none;
+}
+.btn[disabled]:hover,.btn[aria-disabled="true"]:hover{transform:none}
+
+/* Focus — visible in both themes */
+a:focus-visible,button:focus-visible,input:focus-visible,
+textarea:focus-visible,select:focus-visible,summary:focus-visible{
+  outline:3px solid var(--blue-lift);
+  outline-offset:3px;
+}
+.section--dark a:focus-visible,.section--dark button:focus-visible{
+  outline-color:var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Sticky bar — inset, hairline appears only after scroll
+   -------------------------------------------------------------------------- */
+.bar{
+  position:sticky;top:0;z-index:30;
+  background:transparent;
+  transition:background .5s var(--ease),border-color .5s var(--ease);
+  border-bottom:1px solid transparent;
+}
+.bar.is-stuck{
+  background:rgba(10,10,10,0.86);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-bottom-color:rgba(255,255,255,0.12);
+}
+.bar__in{
+  max-width:var(--max);margin:0 auto;
+  padding:0.9rem var(--gut);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.bar__mark{
+  font-family:var(--display);font-weight:900;font-size:1.0625rem;
+  letter-spacing:0.02em;color:var(--paper);text-decoration:none;
+  display:flex;align-items:baseline;gap:0.55rem;
+}
+.bar__mark span{
+  font-family:var(--body);font-size:0.625rem;font-weight:600;
+  letter-spacing:0.2em;color:var(--blue-lift);
+}
+.bar__act{display:flex;align-items:center;gap:1.5rem}
+/* inline-flex + min-height gives this a real tap target. Declared here,
+   before the max-width:640px rule below, so `display:none` still wins on
+   mobile — a later `display` declaration would resurrect it. */
+.bar__rules{
+  display:inline-flex;align-items:center;min-height:2.75rem;
+  font-size:0.75rem;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;
+  color:var(--n-300);text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,0.25);
+  transition:color .35s var(--ease),border-color .35s var(--ease);
+}
+.bar__rules:hover{color:var(--paper);border-color:var(--paper)}
+.bar__cta{
+  padding:0.7rem 1.1rem;min-height:0;font-size:0.75rem;
+}
+@media(max-width:640px){
+  .bar__rules{display:none}
+}
+
+/* Scroll progress hairline */
+.bar__prog{
+  position:absolute;left:0;bottom:-1px;height:2px;width:0;
+  background:var(--gold);
+  transition:width .1s linear;
+}
+
+/* --------------------------------------------------------------------------
+   HERO
+   -------------------------------------------------------------------------- */
+.hero{
+  position:relative;
+  background:var(--ink);
+  color:var(--paper);
+  margin-top:-4.05rem;
+  padding-top:9rem;
+  padding-bottom:clamp(3.5rem,7vw,6rem);
+  overflow:hidden;
+  isolation:isolate;
+}
+/* Ambient brand-blue field, fixed and non-interactive */
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:
+    radial-gradient(58rem 34rem at 78% 8%,rgba(7,46,170,0.55),transparent 62%),
+    radial-gradient(42rem 30rem at 8% 92%,rgba(110,139,255,0.16),transparent 66%);
+  pointer-events:none;
+}
+.hero__grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,0.85fr);
+  gap:clamp(2rem,5vw,4.5rem);
+  align-items:center;
+}
+@media(max-width:940px){
+  .hero__grid{grid-template-columns:1fr;gap:3rem}
+}
+
+/* Max is set so the longest word ("PROTEIN") fits its grid column at
+   1440px without bleeding into the tub. Measured, not guessed. */
+.hero h1{
+  font-size:clamp(3.2rem,8.6vw,7.5rem);
+  line-height:0.84;
+  letter-spacing:-0.045em;
+  text-transform:uppercase;
+}
+.hero h1 em{
+  display:block;
+  font-style:normal;
+  color:var(--blue-lift);
+}
+.hero__lede{
+  max-width:38ch;margin:1.9rem 0 0;
+  font-size:clamp(1.0625rem,1.7vw,1.3125rem);
+  line-height:1.55;color:var(--n-300);
+}
+.hero__lede b{color:var(--paper);font-weight:600}
+
+.hero__cta{display:flex;flex-wrap:wrap;gap:0.85rem;margin-top:2.4rem}
+
+/* No-purchase-necessary — required on the page itself, not buried in rules */
+.npn{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  margin-top:1.8rem;padding:0.5rem 0.85rem;
+  border:1px solid rgba(255,255,255,0.2);
+  font-family:var(--body);
+  font-size:0.6875rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--n-300);
+}
+.npn svg{width:0.9rem;height:0.9rem;stroke:var(--green);fill:none;stroke-width:2.2;flex:none}
+
+/* Fact strip */
+.facts{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  border-top:1px solid rgba(255,255,255,0.13);
+  margin-top:clamp(3rem,6vw,5rem);
+}
+@media(max-width:760px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fact{
+  padding:1.6rem 1.4rem;
+  border-right:1px solid rgba(255,255,255,0.13);
+  text-align:center;
+}
+.fact:last-child{border-right:0}
+@media(max-width:760px){
+  .fact:nth-child(2n){border-right:0}
+  .fact:nth-child(-n+2){border-bottom:1px solid rgba(255,255,255,0.13)}
+}
+.fact__k{
+  font-family:var(--label);
+  font-size:clamp(1.75rem,3.6vw,2.6rem);
+  font-weight:900;line-height:1;letter-spacing:-0.01em;
+  color:var(--paper);
+}
+.fact__k small{font-size:0.5em;font-weight:700;color:var(--blue-lift);margin-left:0.2em}
+.fact__v{
+  margin-top:0.5rem;font-size:0.6875rem;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;color:var(--n-500);
+  line-height:1.4;
+}
+
+/* --------------------------------------------------------------------------
+   TUB — the signature. Live label preview.
+   -------------------------------------------------------------------------- */
+/* Modelled on the real MAGNUM QUATTRO 2 lb tub: white cylinder, gold ribbed
+   screw lid, blue right-hand panel carrying the product name set vertically
+   (bottom-to-top), vertical MAGNUM NUTRACEUTICALS lockup, bilingual EN/FR.
+   Reference: cdn.shopify.com/.../Magnum-Quattro-Front.jpg */
+/* Real product mockup supplied by Edgar, already transparent; re-encoded as
+   WebP (13 KB) and cropped to its alpha bounds -> 512 x 889. Measured on that
+   crop: gold lid ends at 10.1% of height, the straight cylinder runs
+   19.6%-94.7%, so the label is placed inside that band. */
+.tub{
+  position:relative;width:100%;max-width:20rem;margin-inline:auto;
+  aspect-ratio:512 / 889;
+  container-type:inline-size;      /* label internals size in cqw */
+  filter:drop-shadow(0 30px 42px rgba(0,0,0,0.55));
+}
+.tub__shot{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;pointer-events:none;user-select:none;
+}
+
+/* The label sits on the straight section of the cylinder */
+.tub__label{
+  position:absolute;
+  left:9.5%;width:81%;
+  top:24%;height:63%;
+  display:grid;
+  grid-template-columns:1fr minmax(0,0.92fr);
+  background:#fbfaf7;
+  box-shadow:0 0 0 1px rgba(10,10,10,0.10);
+  overflow:hidden;
+}
+/* Curvature: the label wraps a cylinder, so its edges fall into shade */
+.tub__label::after{
+  content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
+  background:linear-gradient(90deg,
+    rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.05) 7%, rgba(255,255,255,0.10) 26%,
+    rgba(255,255,255,0.06) 52%, rgba(0,0,0,0.06) 83%, rgba(0,0,0,0.24) 100%);
+}
+
+/* Label internals are sized in cqw (percent of the bottle's own width) so
+   the whole label scales with the shot — the hero tub and the smaller
+   sidebar tub then stay identical in proportion instead of clipping. */
+.tub__spec{
+  display:flex;flex-direction:column;
+  padding:3.4cqw 3cqw 3cqw 3.4cqw;
+  position:relative;
+  min-width:0;overflow:hidden;
+}
+.tub__badge{
+  align-self:flex-start;
+  border:0.55cqw solid #0a0a0a;background:var(--gold);
+  padding:1.4cqw 2cqw 1.1cqw;text-align:center;line-height:1;
+}
+.tub__badge b{
+  display:block;font-family:var(--label);font-weight:900;
+  font-size:6.2cqw;color:#0a0a0a;letter-spacing:-0.01em;
+}
+.tub__badge span{
+  display:block;margin-top:0.5cqw;
+  font-family:var(--body);font-weight:700;
+  font-size:1.95cqw;letter-spacing:0.09em;text-transform:uppercase;color:#0a0a0a;
+}
+.tub__free{
+  margin:2.4cqw 0 0;
+  font-family:var(--label);font-weight:700;
+  font-size:3.5cqw;letter-spacing:0.1em;
+  text-transform:uppercase;color:#0a0a0a;line-height:1.2;
+}
+.tub__free em{
+  display:block;font-style:normal;font-family:var(--body);font-weight:500;
+  font-size:0.84em;letter-spacing:0.05em;color:#6a6a6a;
+}
+/* Source list — the real tub carries flavour art here; the flavour isn't
+   decided, so this holds the blend detail instead. */
+.tub__blend{
+  margin-top:3cqw;padding-top:2.3cqw;
+  border-top:1px solid rgba(10,10,10,0.16);
+}
+.tub__blend b{
+  display:block;font-family:var(--label);font-weight:900;
+  font-size:4.1cqw;letter-spacing:0.02em;
+  text-transform:uppercase;color:#0a0a0a;line-height:1.05;
+}
+.tub__blend em{
+  display:block;font-style:normal;font-family:var(--body);font-weight:500;
+  font-size:2.1cqw;letter-spacing:0.07em;text-transform:uppercase;
+  color:#6a6a6a;margin-top:0.5cqw;
+}
+.tub__blend ol{
+  list-style:none;margin:1.8cqw 0 0;padding:0 6.5cqw 0 0;  /* clear vertical MAGNUM */
+  font-family:var(--body);font-weight:600;
+  font-size:2.1cqw;letter-spacing:0.07em;text-transform:uppercase;
+  color:#3a3a3e;line-height:1.65;
+}
+.tub__blend ol li{display:flex;gap:0.3em;align-items:baseline;overflow-wrap:anywhere}
+.tub__blend ol span{color:var(--blue);font-weight:700;flex:none}
+
+.tub__net{
+  margin-top:auto;
+  padding-right:6.5cqw;           /* clear the vertical MAGNUM lockup */
+  font-family:var(--label);font-weight:700;
+  font-size:3.1cqw;letter-spacing:0.08em;
+  text-transform:uppercase;color:#0a0a0a;line-height:1.25;
+}
+.tub__net em{
+  display:block;font-style:normal;font-family:var(--body);font-weight:400;
+  font-size:0.84em;color:#6a6a6a;letter-spacing:0.04em;
+}
+
+/* Vertical MAGNUM NUTRACEUTICALS lockup, as on the real tub */
+.tub__mark{
+  position:absolute;right:0.8cqw;bottom:3cqw;margin:0;
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  font-family:var(--display);font-weight:900;
+  font-size:4.4cqw;letter-spacing:0.04em;
+  text-transform:uppercase;color:#0a0a0a;line-height:1;
+}
+.tub__mark em{
+  font-style:normal;font-family:var(--body);font-weight:600;
+  font-size:0.44em;letter-spacing:0.3em;color:#3a3a3e;
+}
+
+/* Right: blue panel — the name lives here, rotated like the real product */
+.tub__panel{
+  position:relative;
+  background:linear-gradient(180deg,#0b39c4 0%,var(--blue) 46%,#04206f 100%);
+  display:flex;align-items:center;justify-content:center;
+  padding:3.2cqw 1.6cqw;
+  overflow:hidden;
+}
+.tub__panel::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,0.13),rgba(255,255,255,0) 38%,rgba(0,0,0,0.20));
+}
+.tub__stack{
+  position:relative;z-index:1;margin:0;
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  display:flex;align-items:center;gap:2cqw;
+  max-height:100%;
+}
+.tub__quattro{
+  font-family:var(--label);font-weight:900;
+  font-size:5cqw;letter-spacing:0.16em;
+  text-transform:uppercase;color:rgba(255,255,255,0.62);
+  max-width:1.4em;overflow:hidden;
+  transition:max-width .5s var(--ease),opacity .4s var(--ease),margin .5s var(--ease);
+}
+.tub__quattro[data-on="false"]{max-width:0;opacity:0;margin-inline:-1cqw}
+
+/* The proposed name — the whole point of the page */
+.tub__name{
+  font-family:var(--label);font-weight:900;
+  font-size:2.2rem;                 /* JS rescales this to fit the panel */
+  line-height:0.92;letter-spacing:0.005em;
+  text-transform:uppercase;color:#fff;
+  white-space:nowrap;
+  transition:color .35s var(--ease);
+}
+.tub__name.is-empty{color:rgba(255,255,255,0.34)}
+
+.tub__mix{
+  position:absolute;left:1.4cqw;bottom:2.4cqw;z-index:1;
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  font-family:var(--body);font-weight:600;
+  font-size:1.95cqw;letter-spacing:0.15em;text-transform:uppercase;
+  color:rgba(255,255,255,0.66);line-height:1.45;
+}
+
+/* No padding here: .tub uses aspect-ratio with an absolutely-positioned
+   label, so any padding would letterbox the shot and misalign the label.
+   The studio backdrop lives on the plate behind it instead. */
+.tub--onlight{
+  max-width:14rem;
+  filter:drop-shadow(0 14px 22px rgba(0,0,0,0.22));
+}
+.tub-stage{
+  background:radial-gradient(115% 78% at 50% 16%,#ffffff,#e9e8e3 80%);
+  border:1px solid rgba(10,10,10,0.09);
+  padding:1.5rem 1.25rem 1.25rem;
+}
+
+.tub__cap{
+  margin-top:1.15rem;text-align:center;
+  font-size:0.625rem;font-weight:600;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--n-500);
+}
+
+/* --------------------------------------------------------------------------
+   STEPS — 1-3 already done by the time they land here
+   -------------------------------------------------------------------------- */
+.steps{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:1px;background:rgba(10,10,10,0.12);
+  border:1px solid rgba(10,10,10,0.12);
+  margin-top:clamp(2.5rem,5vw,3.75rem);
+}
+@media(max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.steps{grid-template-columns:1fr}}
+
+.step{background:var(--cream);padding:1.9rem 1.5rem 2rem;position:relative}
+.step--now{background:var(--ink);color:var(--paper)}
+
+.step__top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem}
+.step__n{
+  font-family:var(--label);font-weight:900;font-size:2.1rem;line-height:1;
+  color:rgba(10,10,10,0.22);
+}
+.step--now .step__n{color:var(--gold)}
+.step--done .step__n{color:rgba(10,10,10,0.22)}
+
+.step__tag{
+  font-size:0.5625rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
+  padding:0.3rem 0.5rem;display:inline-flex;align-items:center;gap:0.35rem;
+}
+.step__tag--done{color:var(--green);border:1px solid rgba(74,168,117,0.4)}
+.step__tag--now{color:var(--ink);background:var(--gold)}
+.step__tag svg{width:0.7rem;height:0.7rem;stroke:currentColor;fill:none;stroke-width:2.6}
+
+.step h3{font-size:1.25rem;letter-spacing:-0.02em;line-height:1.05;margin-bottom:0.6rem}
+.step p{margin:0;font-size:0.9375rem;line-height:1.55;color:var(--n-700)}
+.step--now p{color:var(--n-300)}
+
+/* --------------------------------------------------------------------------
+   PRIZE — the single gold moment
+   -------------------------------------------------------------------------- */
+.prize{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
+  gap:clamp(2rem,5vw,4rem);align-items:center;
+}
+@media(max-width:900px){.prize{grid-template-columns:1fr}}
+
+/* Kill the browser's default p margin: it resolves 1em against this
+   element's own 240px font-size, so it was adding a 240px gap. */
+.prize__num{
+  margin:0 0 2rem;
+  font-family:var(--label);font-weight:900;
+  font-size:clamp(6rem,19vw,15rem);line-height:0.78;letter-spacing:-0.03em;
+  color:var(--gold);
+}
+.prize__numsub{
+  font-family:var(--label);font-weight:700;
+  font-size:clamp(1.1rem,2.4vw,1.6rem);letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--paper);margin-top:0.7rem;
+}
+.prize__list{list-style:none;margin:2rem 0 0;padding:0}
+.prize__list li{
+  display:flex;gap:1rem;padding:1.1rem 0;
+  border-top:1px solid rgba(255,255,255,0.13);
+  font-size:0.9375rem;line-height:1.55;color:var(--n-300);
+}
+.prize__list li:last-child{border-bottom:1px solid rgba(255,255,255,0.13)}
+.prize__list b{color:var(--paper);font-weight:600}
+.prize__list svg{
+  width:1.05rem;height:1.05rem;flex:none;margin-top:0.28rem;
+  stroke:var(--gold);fill:none;stroke-width:2;
+}
+
+/* --------------------------------------------------------------------------
+   FORMULA
+   -------------------------------------------------------------------------- */
+.spec{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1px;background:rgba(10,10,10,0.12);
+  border:1px solid rgba(10,10,10,0.12);
+  margin-top:clamp(2.5rem,5vw,3.5rem);
+}
+@media(max-width:700px){.spec{grid-template-columns:1fr}}
+.spec__i{background:var(--paper);padding:1.9rem 1.6rem}
+.spec__k{
+  font-family:var(--label);font-weight:900;
+  font-size:clamp(2.2rem,4.6vw,3rem);line-height:1;letter-spacing:-0.015em;
+}
+.spec__k small{font-size:0.42em;font-weight:700;color:var(--blue);margin-left:0.15em}
+.spec__v{
+  margin-top:0.6rem;font-size:0.6875rem;font-weight:600;
+  letter-spacing:0.15em;text-transform:uppercase;color:var(--n-700);
+}
+
+/* Protein sources — the doc says "in order of inclusion", so the bar
+   length carries that ordinal information rather than decorating it. */
+.sources{margin-top:clamp(2.5rem,5vw,3.5rem)}
+.sources__head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:1rem;
+  padding-bottom:0.9rem;border-bottom:1px solid rgba(10,10,10,0.14);
+  font-size:0.6875rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--n-700);
+}
+.src{
+  display:grid;grid-template-columns:2.5rem minmax(0,1fr);
+  gap:1.25rem;align-items:center;
+  padding:1.15rem 0;border-bottom:1px solid rgba(10,10,10,0.1);
+}
+.src__ord{
+  font-family:var(--label);font-weight:900;font-size:1.35rem;
+  color:rgba(10,10,10,0.26);line-height:1;
+}
+.src__nm{
+  font-family:var(--display);font-weight:800;font-size:1.0625rem;
+  letter-spacing:-0.015em;margin-bottom:0.55rem;
+}
+.src__nm em{
+  font-style:normal;font-family:var(--body);font-weight:500;
+  font-size:0.8125rem;color:var(--n-700);letter-spacing:0;margin-left:0.5rem;
+}
+.src__bar{height:6px;background:rgba(10,10,10,0.08);overflow:hidden}
+/* Full width is the resting state so the order-of-inclusion bars still
+   read with JS off; .js collapses them so they can animate in. */
+.src__fill{
+  height:100%;background:var(--blue);
+  width:var(--w);transition:width 1.1s var(--ease-out);
+}
+.js .src__fill{width:0}
+.src:nth-child(2) .src__fill{transition-delay:.05s}
+.src:nth-child(3) .src__fill{transition-delay:.1s}
+.src:nth-child(4) .src__fill{transition-delay:.15s}
+.src:nth-child(5) .src__fill{transition-delay:.2s}
+.src:nth-child(6) .src__fill{transition-delay:.25s}
+.js .is-in .src__fill{width:var(--w)}
+
+.note{
+  margin-top:1.5rem;padding:1rem 1.15rem;
+  background:rgba(7,46,170,0.05);border-left:3px solid var(--blue);
+  font-size:0.875rem;line-height:1.6;color:var(--n-700);
+}
+
+/* --------------------------------------------------------------------------
+   ENTRY FORM — editorial split, tub preview sticky alongside
+   -------------------------------------------------------------------------- */
+.entry{
+  display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,0.75fr);
+  gap:clamp(2rem,5vw,4.5rem);align-items:start;
+  margin-top:clamp(2.5rem,5vw,3.75rem);
+}
+@media(max-width:980px){.entry{grid-template-columns:1fr}}
+
+.entry__side{position:sticky;top:6rem}
+@media(max-width:980px){.entry__side{position:static;order:-1}}
+
+.verified{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.85rem 1rem;margin-bottom:1.75rem;
+  border:1px solid rgba(74,168,117,0.45);
+  background:rgba(74,168,117,0.08);
+}
+.verified svg{width:1.05rem;height:1.05rem;stroke:var(--green);fill:none;stroke-width:2.4;flex:none}
+.verified p{margin:0;font-size:0.8125rem;line-height:1.45;color:var(--n-700)}
+.verified b{color:var(--ink);font-weight:600}
+
+.fset{border:0;padding:0;margin:0 0 2.75rem}
+.fset__lg{
+  display:flex;align-items:baseline;gap:0.85rem;
+  padding-bottom:0.9rem;margin-bottom:1.6rem;
+  border-bottom:1px solid rgba(10,10,10,0.14);
+  width:100%;
+}
+.fset__n{
+  font-family:var(--label);font-weight:900;font-size:1rem;
+  color:var(--blue);flex:none;
+}
+.fset__t{
+  font-family:var(--display);font-weight:800;font-size:1.0625rem;
+  letter-spacing:-0.01em;
+}
+
+.field{margin-bottom:1.6rem}
+.field__l{
+  display:block;font-size:0.9375rem;font-weight:600;
+  line-height:1.45;margin-bottom:0.6rem;
+}
+.field__req{color:var(--red);margin-left:0.15rem}
+.field__h{
+  display:block;font-size:0.8125rem;line-height:1.5;
+  color:var(--n-700);margin:-0.25rem 0 0.7rem;font-weight:400;
+}
+
+.inp,.ta,.sel{
+  width:100%;
+  padding:0.95rem 1rem;
+  background:var(--paper);
+  border:1px solid rgba(10,10,10,0.22);
+  border-radius:0;                 /* theme inputs_radius:0 */
+  font-family:var(--body);
+  font-size:1rem;                  /* >=16px: no iOS zoom-on-focus */
+  line-height:1.5;color:var(--ink);
+  transition:border-color .35s var(--ease),box-shadow .35s var(--ease);
+}
+.inp:hover,.ta:hover{border-color:rgba(10,10,10,0.4)}
+.inp:focus,.ta:focus{
+  border-color:var(--blue);
+  box-shadow:inset 0 0 0 1px var(--blue);
+}
+.ta{resize:vertical;min-height:7rem}
+.inp::placeholder,.ta::placeholder{color:var(--n-500)}
+
+.count{
+  display:flex;justify-content:space-between;gap:1rem;
+  margin-top:0.5rem;font-size:0.75rem;color:var(--n-700);
+}
+.count b{font-variant-numeric:tabular-nums;font-weight:600}
+.count.is-over b{color:var(--red)}
+
+/* Yes / No — real radios, styled as squared segmented control */
+.seg{display:flex;gap:0;border:1px solid rgba(10,10,10,0.22);width:max-content;max-width:100%}
+.seg__o{position:relative}
+.seg__o input{position:absolute;inset:0;opacity:0;cursor:pointer;margin:0;width:100%;height:100%}
+.seg__o span{
+  display:grid;place-items:center;
+  min-width:7rem;min-height:3rem;padding:0 1.5rem;
+  font-size:0.8125rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+  cursor:pointer;background:var(--paper);color:var(--n-700);
+  transition:background .35s var(--ease),color .35s var(--ease);
+}
+.seg__o + .seg__o span{border-left:1px solid rgba(10,10,10,0.22)}
+.seg__o input:hover + span{background:var(--n-100)}
+.seg__o input:checked + span{background:var(--ink);color:var(--paper)}
+.seg__o input:focus-visible + span{outline:3px solid var(--blue-lift);outline-offset:2px}
+
+/* Conditional follow-ups */
+.cond{display:none}
+.cond.is-on{display:block;animation:slip .55s var(--ease) both}
+@keyframes slip{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* Checkboxes */
+.check{
+  display:grid;grid-template-columns:1.5rem minmax(0,1fr);
+  gap:0.9rem;align-items:start;
+  padding:1.1rem;border:1px solid rgba(10,10,10,0.22);
+  background:var(--paper);cursor:pointer;
+  transition:border-color .35s var(--ease),background .35s var(--ease);
+}
+.check:hover{border-color:rgba(10,10,10,0.45)}
+.check:has(input:checked){border-color:var(--blue);background:rgba(7,46,170,0.03)}
+.check:has(input:focus-visible){outline:3px solid var(--blue-lift);outline-offset:2px}
+.check input{
+  appearance:none;-webkit-appearance:none;margin:0;
+  width:1.5rem;height:1.5rem;flex:none;
+  border:1px solid rgba(10,10,10,0.4);background:var(--paper);
+  cursor:pointer;position:relative;
+  transition:background .3s var(--ease),border-color .3s var(--ease);
+}
+.check input:checked{background:var(--blue);border-color:var(--blue)}
+.check input:checked::after{
+  content:"";position:absolute;left:0.47rem;top:0.2rem;
+  width:0.34rem;height:0.68rem;
+  border:solid var(--paper);border-width:0 2.5px 2.5px 0;
+  transform:rotate(45deg);
+}
+.check__t{font-size:0.875rem;line-height:1.55}
+.check__t a{color:var(--blue);font-weight:600;text-underline-offset:3px}
+.check__t small{
+  display:block;margin-top:0.35rem;font-size:0.8125rem;color:var(--n-700);
+}
+.check--req{border-color:rgba(10,10,10,0.42)}
+.check + .check{margin-top:0.85rem}
+
+.submit-row{
+  margin-top:2rem;padding-top:2rem;
+  border-top:1px solid rgba(10,10,10,0.14);
+  display:flex;flex-wrap:wrap;align-items:center;gap:1.25rem;
+}
+.submit-note{font-size:0.8125rem;color:var(--n-700);max-width:30ch;line-height:1.5}
+
+/* Confirmation state */
+.confirm{display:none;border:1px solid rgba(74,168,117,0.5);padding:0.5rem;background:rgba(74,168,117,0.07)}
+.confirm.is-on{display:block;animation:slip .6s var(--ease) both}
+.confirm__in{background:var(--paper);border:1px solid rgba(74,168,117,0.3);padding:clamp(2rem,4vw,3rem)}
+.confirm__ic{width:3rem;height:3rem;stroke:var(--green);fill:none;stroke-width:1.8;margin-bottom:1.5rem}
+.confirm h3{font-size:clamp(1.75rem,3.5vw,2.5rem);margin-bottom:1rem}
+.confirm p{margin:0 0 1rem;color:var(--n-700);max-width:52ch;font-size:0.9375rem;line-height:1.6}
+.confirm dl{
+  margin:1.75rem 0 0;padding-top:1.5rem;border-top:1px solid rgba(10,10,10,0.12);
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:0.7rem 1.5rem;
+  font-size:0.875rem;
+}
+.confirm dt{
+  font-size:0.6875rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;
+  color:var(--n-700);padding-top:0.15rem;
+}
+.confirm dd{margin:0;font-weight:600}
+
+/* --------------------------------------------------------------------------
+   JUDGING
+   -------------------------------------------------------------------------- */
+.judge{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:1px;background:rgba(255,255,255,0.13);
+  border:1px solid rgba(255,255,255,0.13);
+  margin-top:clamp(2.5rem,5vw,3.5rem);
+}
+@media(max-width:760px){.judge{grid-template-columns:1fr}}
+.judge__i{background:var(--ink);padding:2rem 1.7rem 2.2rem}
+.judge__pct{
+  font-family:var(--label);font-weight:900;
+  font-size:clamp(2.6rem,5.5vw,3.6rem);line-height:1;letter-spacing:-0.02em;
+  color:var(--blue-lift);
+}
+.judge__i h3{font-size:1.1875rem;margin:0.9rem 0 0.65rem;letter-spacing:-0.02em}
+.judge__i p{margin:0;font-size:0.9375rem;line-height:1.55;color:var(--n-300)}
+
+/* --------------------------------------------------------------------------
+   RULES / FOOTER
+   -------------------------------------------------------------------------- */
+.rules{margin-top:clamp(2.5rem,5vw,3.5rem);border-top:1px solid rgba(10,10,10,0.14)}
+.rule{border-bottom:1px solid rgba(10,10,10,0.14)}
+.rule summary{
+  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  padding:1.4rem 0;cursor:pointer;list-style:none;
+  font-family:var(--display);font-weight:800;font-size:1.0625rem;letter-spacing:-0.01em;
+}
+.rule summary::-webkit-details-marker{display:none}
+.rule__pm{position:relative;width:1rem;height:1rem;flex:none}
+.rule__pm::before,.rule__pm::after{
+  content:"";position:absolute;background:var(--ink);
+  transition:transform .45s var(--ease),opacity .45s var(--ease);
+}
+.rule__pm::before{left:0;top:0.4375rem;width:1rem;height:2px}
+.rule__pm::after{left:0.4375rem;top:0;width:2px;height:1rem}
+.rule[open] .rule__pm::after{transform:rotate(90deg);opacity:0}
+.rule__body{padding:0 0 1.6rem;max-width:68ch}
+.rule__body p{margin:0 0 0.9rem;font-size:0.9375rem;line-height:1.65;color:var(--n-700)}
+.rule__body p:last-child{margin-bottom:0}
+.rule__body b{color:var(--ink);font-weight:600}
+
+.foot{background:var(--ink);color:var(--n-500);padding-block:clamp(3rem,6vw,4.5rem)}
+.foot__grid{
+  display:flex;flex-wrap:wrap;gap:2rem;
+  align-items:flex-start;justify-content:space-between;
+}
+.foot__mark{
+  font-family:var(--display);font-weight:900;font-size:1.375rem;
+  color:var(--paper);letter-spacing:0.02em;
+}
+.foot p{margin:0.9rem 0 0;font-size:0.8125rem;line-height:1.7;max-width:48ch}
+.foot a{color:var(--n-300);text-underline-offset:3px}
+.foot a:hover{color:var(--paper)}
+/* Stacked footer links act as navigation, so give them real tap height
+   instead of leaving them at inline text height (~16px). */
+.foot__nav a{display:inline-block;padding:0.55rem 0;min-height:2.75rem;line-height:1.6}
+.foot__legal{
+  margin-top:2.5rem;padding-top:1.75rem;
+  border-top:1px solid rgba(255,255,255,0.13);
+  font-size:0.75rem;line-height:1.7;
+}
+
+/* --------------------------------------------------------------------------
+   TBD tokens — every unresolved value from the source docs, made visible
+   -------------------------------------------------------------------------- */
+.tbd{
+  background:rgba(245,197,24,0.22);
+  border-bottom:2px solid var(--gold-deep);
+  padding:0 0.25em;font-weight:700;font-style:normal;
+  white-space:nowrap;
+}
+.section--dark .tbd,.foot .tbd,.hero .tbd{
+  background:rgba(245,197,24,0.2);color:var(--gold);
+}
+
+/* --------------------------------------------------------------------------
+   Scroll reveal
+   -------------------------------------------------------------------------- */
+/* Scoped to .js so the page is fully readable if JavaScript never runs.
+   Without this guard a script failure leaves 13 sections at opacity:0. */
+.js .rv{opacity:0;transform:translateY(2.5rem);
+    transition:opacity .85s var(--ease-out),transform .85s var(--ease-out)}
+.js .rv.is-in{opacity:1;transform:none}
+.rv-d1{transition-delay:.08s}
+.rv-d2{transition-delay:.16s}
+.rv-d3{transition-delay:.24s}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+  }
+  .js .rv{opacity:1;transform:none}
+  .src__fill{width:var(--w)}
+  .btn:hover{transform:none}
+}
+
+.sr{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+.skip{
+  position:absolute;left:-9999px;top:0;z-index:100;
+  background:var(--gold);color:var(--ink);padding:1rem 1.5rem;
+  font-weight:700;text-decoration:none;
+}
+.skip:focus{left:0}
+</style>
+
+<!-- Set before first paint: enables the reveal animations only when JS is
+     running, so the page degrades to fully-visible rather than blank. -->
+<script>document.documentElement.className+=' js';</script>
+</head>
+<body>
+
+<a class="skip" href="#entry-form">Skip to entry form</a>
+
+<!-- ======================= STICKY BAR ======================= -->
+<header class="bar" id="bar">
+  <div class="bar__prog" id="prog"></div>
+  <div class="bar__in">
+    <a class="bar__mark" href="#top">MAGNUM<span>CONTEST</span></a>
+    <div class="bar__act">
+      <a class="bar__rules" href="#rules">Official rules</a>
+      <a class="btn btn--gold bar__cta" href="#entry-form">
+        Enter now
+        <span class="btn__well" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="square"/></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ======================= HERO ======================= -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero__grid">
+
+      <div>
+        <p class="eyebrow eyebrow--light">Magnum Nutraceuticals · New protein · Contest</p>
+        <h1>Name<br>our next<em>protein.</em></h1>
+        <p class="hero__lede">
+          We built a new protein. It doesn't have a name yet. Give it one, and if our judges
+          pick yours, you drink a <b>full year of it</b> — flavour and format your call.
+        </p>
+
+        <div class="hero__cta">
+          <a class="btn btn--gold" href="#entry-form">
+            Submit your name
+            <span class="btn__well" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="square"/></svg>
+            </span>
+          </a>
+          <a class="btn btn--ghost" href="#formula">
+            See the formula
+            <span class="btn__well" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6" stroke-linecap="square"/></svg>
+            </span>
+          </a>
+        </div>
+
+        <p class="npn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+          No purchase necessary
+        </p>
+      </div>
+
+      <!-- SIGNATURE: live label preview, driven by the entry form -->
+      <div>
+        <div class="tub">
+          <img class="tub__shot" src="data:image/webp;base64,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" alt="" aria-hidden="true">
+
+          <div class="tub__label">
+            <div class="tub__spec">
+              <div class="tub__badge">
+                <b>30<span style="display:inline;font-size:0.55em">G</span></b>
+                <span>Protein<br>per serving</span>
+              </div>
+              <p class="tub__free">
+                Lactose free
+                <em>Sans lactose</em>
+              </p>
+              <div class="tub__blend">
+                <b>4-source<br>protein blend</b>
+                <em>M&#233;lange de prot&#233;ines</em>
+                <ol>
+                  <li><span>01</span>Hydrolyzed collagen</li>
+                  <li><span>02</span>Pea</li>
+                  <li><span>03</span>Fava</li>
+                  <li><span>04</span>Rice</li>
+                  <li><span>05</span>BCAAs</li>
+                </ol>
+              </div>
+              <p class="tub__net">
+                Net wt. 910 g
+                <em>2 lbs &#183; Poids net</em>
+              </p>
+              <p class="tub__mark">Magnum <em>Nutraceuticals</em></p>
+            </div>
+
+            <div class="tub__panel">
+              <p class="tub__stack">
+                <span class="tub__quattro" id="tubQuattro" data-on="false">Quattro</span>
+                <span class="tub__name is-empty" id="tubName">Your name here</span>
+              </p>
+              <span class="tub__mix">Protein drink mix<br>Boisson prot&#233;in&#233;e</span>
+            </div>
+          </div>
+        </div>
+        <p class="tub__cap">Live preview · updates as you type</p>
+      </div>
+
+    </div>
+
+    <!-- Fact strip -->
+    <div class="facts">
+      <div class="fact">
+        <p class="fact__k">$1,000<small>CAD</small></p>
+        <p class="fact__v">Approx. retail value</p>
+      </div>
+      <div class="fact">
+        <p class="fact__k">14</p>
+        <p class="fact__v">Two-pound tubs<br>= one year's supply</p>
+      </div>
+      <div class="fact">
+        <p class="fact__k">1</p>
+        <p class="fact__v">Winner, chosen on skill<br>— no random draw</p>
+      </div>
+      <div class="fact">
+        <p class="fact__k">CA<small>excl. QC</small></p>
+        <p class="fact__v">Age of majority<br>in your province</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= HOW IT WORKS ======================= -->
+<section class="section section--cream" id="how">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow">How this works</p>
+      <h2 class="sec-title">You're already three<br>steps in.</h2>
+      <p class="sec-sub">
+        You got here through a verified link, so the entry part is done for you.
+        All that's left is the naming.
+      </p>
+    </div>
+
+    <div class="steps rv rv-d1">
+      <div class="step step--done">
+        <div class="step__top">
+          <span class="step__n">1</span>
+          <span class="step__tag step__tag--done">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            Done
+          </span>
+        </div>
+        <h3>You gave us your email</h3>
+        <p>From the ad, email, or social post that brought you here.</p>
+      </div>
+
+      <div class="step step--done">
+        <div class="step__top">
+          <span class="step__n">2</span>
+          <span class="step__tag step__tag--done">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            Done
+          </span>
+        </div>
+        <h3>You verified it</h3>
+        <p>One click in your inbox. That's what keeps entries to one per person.</p>
+      </div>
+
+      <div class="step step--done">
+        <div class="step__top">
+          <span class="step__n">3</span>
+          <span class="step__tag step__tag--done">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            Done
+          </span>
+        </div>
+        <h3>Your link opened this page</h3>
+        <p>The link is unique to you. Don't share it — it carries your entry.</p>
+      </div>
+
+      <div class="step step--now">
+        <div class="step__top">
+          <span class="step__n">4</span>
+          <span class="step__tag step__tag--now">You are here</span>
+        </div>
+        <h3>Name the protein</h3>
+        <p>Read the formula, then submit your name and the thinking behind it. We email you a confirmation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PRIZE ======================= -->
+<section class="section section--dark on-dark" id="prize">
+  <div class="wrap">
+    <div class="prize">
+      <div class="rv">
+        <p class="eyebrow eyebrow--light">The prize</p>
+        <p class="prize__num">14</p>
+        <p class="prize__numsub">Two-pound tubs</p>
+      </div>
+
+      <div class="rv rv-d1">
+        <h2 class="sec-title">A year of protein,<br>built your way.</h2>
+        <ul class="prize__list">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            <span><b>You pick the flavours and the formats</b> from Magnum's current line, subject to availability. If something you choose runs out, we substitute a comparable product of equal or greater value.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            <span>Approximate retail value <b>$1,000 CAD</b>. No cash value, not transferable.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            <span>One winner. Notified by email within <b>three business days</b> of selection, with <b>five days</b> to respond.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            <span>To collect, the winner signs a <b>Declaration and Intellectual Property Release</b> and — if there's a tie — answers a mathematical skill-testing question, as Canadian law requires.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FORMULA ======================= -->
+<section class="section section--paper" id="formula">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow">The formula</p>
+      <h2 class="sec-title">Know what you're<br>naming.</h2>
+      <p class="sec-sub">
+        A good name comes from the product. Here's what's in the tub — the judges will be
+        looking for a name that fits it.
+      </p>
+    </div>
+
+    <div class="spec rv rv-d1">
+      <div class="spec__i">
+        <p class="spec__k">30<small>g</small></p>
+        <p class="spec__v">Protein per scoop</p>
+      </div>
+      <div class="spec__i">
+        <p class="spec__k">0<small>g</small></p>
+        <p class="spec__v">Lactose — lactose free</p>
+      </div>
+      <div class="spec__i">
+        <p class="spec__k">Full</p>
+        <p class="spec__v">Amino acid profile · BCAAs</p>
+      </div>
+    </div>
+
+    <div class="sources rv rv-d2" id="sources">
+      <div class="sources__head">
+        <span>Protein sources</span>
+        <span>In order of inclusion</span>
+      </div>
+
+      <div class="src">
+        <span class="src__ord">01</span>
+        <div>
+          <p class="src__nm">Hydrolyzed Collagen <em>Beef</em></p>
+          <div class="src__bar"><div class="src__fill" style="--w:100%"></div></div>
+        </div>
+      </div>
+      <div class="src">
+        <span class="src__ord">02</span>
+        <div>
+          <p class="src__nm">Pea</p>
+          <div class="src__bar"><div class="src__fill" style="--w:78%"></div></div>
+        </div>
+      </div>
+      <div class="src">
+        <span class="src__ord">03</span>
+        <div>
+          <p class="src__nm">Fava</p>
+          <div class="src__bar"><div class="src__fill" style="--w:58%"></div></div>
+        </div>
+      </div>
+      <div class="src">
+        <span class="src__ord">04</span>
+        <div>
+          <p class="src__nm">Rice</p>
+          <div class="src__bar"><div class="src__fill" style="--w:40%"></div></div>
+        </div>
+      </div>
+      <div class="src">
+        <span class="src__ord">05</span>
+        <div>
+          <p class="src__nm">BCAAs <em>Full amino acid profile</em></p>
+          <div class="src__bar"><div class="src__fill" style="--w:24%"></div></div>
+        </div>
+      </div>
+
+      <p class="note">
+        <b>Note:</b> this blend is not vegan — the first source is beef-derived collagen.
+        Bar lengths show order of inclusion only; they are not exact percentages.
+        <span class="tbd">Confirm before publishing</span> whether exact ratios can be disclosed.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ENTRY FORM ======================= -->
+<section class="section section--cream" id="entry-form">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow">Your entry</p>
+      <h2 class="sec-title">Name it.</h2>
+      <p class="sec-sub">
+        Five questions. Watch the tub update as you type — that's roughly how your
+        name will read on shelf.
+      </p>
+    </div>
+
+    <div class="entry">
+
+      <!-- ---------------- FORM ---------------- -->
+      <div>
+        <form id="entryForm" novalidate>
+
+          <div class="verified">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            <p>Email verified — you're entering as <b class="tbd">entrant@email.com</b>. One entry per person.</p>
+          </div>
+
+          <!-- Q1 -->
+          <fieldset class="fset">
+            <legend class="fset__lg">
+              <span class="fset__n">01</span>
+              <span class="fset__t">The "Quattro" question</span>
+            </legend>
+
+            <div class="field">
+              <span class="field__l" id="q1l">
+                Should Magnum's new protein use “Quattro” in its name?<span class="field__req" aria-hidden="true">*</span>
+              </span>
+              <span class="field__h">
+                For example: <b>Magnum Quattro Excalibur</b>. That's a placeholder, not a shortlist.
+              </span>
+
+              <div class="seg" role="radiogroup" aria-labelledby="q1l">
+                <label class="seg__o">
+                  <input type="radio" name="quattro" value="yes" required>
+                  <span>Yes</span>
+                </label>
+                <label class="seg__o">
+                  <input type="radio" name="quattro" value="no" required>
+                  <span>No</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Q2: only if yes -->
+            <div class="field cond" id="condYes">
+              <label class="field__l" for="whyYes">Why should we keep “Quattro”?<span class="field__req" aria-hidden="true">*</span></label>
+              <textarea class="ta" id="whyYes" name="why_yes" placeholder="What does Quattro carry that a new word wouldn't?"></textarea>
+            </div>
+
+            <!-- Q3: only if no -->
+            <div class="field cond" id="condNo">
+              <label class="field__l" for="whyNo">Why should we drop “Quattro”?<span class="field__req" aria-hidden="true">*</span></label>
+              <textarea class="ta" id="whyNo" name="why_no" placeholder="What's it costing us to keep it?"></textarea>
+            </div>
+          </fieldset>
+
+          <!-- Q4 + Q5 -->
+          <fieldset class="fset">
+            <legend class="fset__lg">
+              <span class="fset__n">02</span>
+              <span class="fset__t">The name</span>
+            </legend>
+
+            <div class="field">
+              <label class="field__l" for="nameInput">What would you name our new protein?<span class="field__req" aria-hidden="true">*</span></label>
+              <input class="inp" id="nameInput" name="proposed_name" type="text"
+                     maxlength="28" autocomplete="off" spellcheck="false"
+                     placeholder="One name. Make it count.">
+              <div class="count" id="nameCount">
+                <span>Shorter names read better on the tub.</span>
+                <span><b id="nameNum">0</b>/28</span>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field__l" for="rationale">Why that name?<span class="field__req" aria-hidden="true">*</span></label>
+              <span class="field__h">
+                This is the part that gets scored — on originality, fit to the product, and fit to Magnum.
+                Say what it means and why it belongs on this tub.
+              </span>
+              <textarea class="ta" id="rationale" name="rationale" style="min-height:9rem"
+                        placeholder="Tell us the thinking."></textarea>
+              <div class="count" id="ratCount">
+                <span>Judges read every entry.</span>
+                <span><b id="ratNum">0</b> characters</span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Consent -->
+          <fieldset class="fset">
+            <legend class="fset__lg">
+              <span class="fset__n">03</span>
+              <span class="fset__t">Before you submit</span>
+            </legend>
+
+            <label class="check check--req" for="eligible">
+              <input type="checkbox" id="eligible" name="eligible" required>
+              <span class="check__t">
+                I confirm that I have reached the age of majority in my province or territory of
+                residence, that I am a resident of Canada excluding Quebec, and that I have read
+                and agree to the <a href="#rules">Official Contest Rules</a>.
+                <small>Required. Entries submitted without this confirmation are not accepted.</small>
+              </span>
+            </label>
+
+            <label class="check" for="marketing">
+              <input type="checkbox" id="marketing" name="marketing">
+              <span class="check__t">
+                Sign me up for Magnum marketing emails.
+                <small>Optional. This has no effect on your entry or your chance of winning.</small>
+              </span>
+            </label>
+
+            <div class="submit-row">
+              <button class="btn btn--gold" type="submit" id="submitBtn" aria-disabled="true">
+                Submit my entry
+                <span class="btn__well" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="square"/></svg>
+                </span>
+              </button>
+              <p class="submit-note" id="submitNote">
+                Confirm your eligibility above to submit.
+              </p>
+            </div>
+          </fieldset>
+
+        </form>
+
+        <!-- Confirmation -->
+        <div class="confirm" id="confirmPanel" role="status" aria-live="polite">
+          <div class="confirm__in">
+            <svg class="confirm__ic" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 6 9 17l-5-5" stroke-linecap="square"/>
+            </svg>
+            <h3>Entry received.</h3>
+            <p>
+              A confirmation email is on its way to <b class="tbd">entrant@email.com</b>.
+              If it doesn't arrive in a few minutes, check your spam folder before entering again —
+              a second entry from the same person is disqualified, not counted twice.
+            </p>
+            <p>
+              Judging starts once entries close. If your name wins, we email you within three
+              business days of selection, and you'll have five days to reply.
+            </p>
+            <dl>
+              <dt>Your name</dt><dd id="cName">—</dd>
+              <dt>Quattro</dt><dd id="cQuattro">—</dd>
+              <dt>Entries close</dt><dd><span class="tbd">[END DATE]</span> at <span class="tbd">[TIME]</span> ET</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------------- STICKY PREVIEW ---------------- -->
+      <aside class="entry__side" aria-label="Label preview">
+        <div class="tray">
+          <div class="tray__plate tub-stage">
+            <p class="eyebrow" style="font-size:0.625rem;margin-bottom:1.25rem">On the shelf</p>
+            <div class="tub tub--onlight">
+              <img class="tub__shot" src="data:image/webp;base64,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" alt="" aria-hidden="true">
+
+              <div class="tub__label">
+                <div class="tub__spec">
+                  <div class="tub__badge">
+                    <b>30<span style="display:inline;font-size:0.55em">G</span></b>
+                    <span>Protein<br>per serving</span>
+                  </div>
+                  <p class="tub__free">
+                    Lactose free
+                    <em>Sans lactose</em>
+                  </p>
+                  <div class="tub__blend">
+                    <b>4-source<br>protein blend</b>
+                    <em>M&#233;lange de prot&#233;ines</em>
+                    <ol>
+                      <li><span>01</span>Hydrolyzed collagen</li>
+                      <li><span>02</span>Pea</li>
+                      <li><span>03</span>Fava</li>
+                      <li><span>04</span>Rice</li>
+                      <li><span>05</span>BCAAs</li>
+                    </ol>
+                  </div>
+                  <p class="tub__net">
+                    Net wt. 910 g
+                    <em>2 lbs &#183; Poids net</em>
+                  </p>
+                  <p class="tub__mark">Magnum <em>Nutraceuticals</em></p>
+                </div>
+
+                <div class="tub__panel">
+                  <p class="tub__stack">
+                    <span class="tub__quattro" id="tubQuattro2" data-on="false">Quattro</span>
+                    <span class="tub__name is-empty" id="tubName2">Your name here</span>
+                  </p>
+                  <span class="tub__mix">Protein drink mix<br>Boisson prot&#233;in&#233;e</span>
+                </div>
+              </div>
+            </div>
+            <p class="tub__cap" style="color:var(--n-700)">Mock-up. Final packaging will differ.</p>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================= JUDGING ======================= -->
+<section class="section section--dark on-dark" id="judging">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow eyebrow--light">How we choose</p>
+      <h2 class="sec-title">Judged, not drawn.</h2>
+      <p class="sec-sub">
+        A panel of Magnum representatives scores every entry against three equally weighted
+        criteria. There is no element of chance in picking the winner.
+      </p>
+    </div>
+
+    <div class="judge rv rv-d1">
+      <div class="judge__i">
+        <p class="judge__pct">33.3%</p>
+        <h3>Originality</h3>
+        <p>Is it a name we haven't heard? Something we could actually own.</p>
+      </div>
+      <div class="judge__i">
+        <p class="judge__pct">33.3%</p>
+        <h3>Relevance to the product</h3>
+        <p>Does it say something true about a 30 g, lactose-free, four-source blend?</p>
+      </div>
+      <div class="judge__i">
+        <p class="judge__pct">33.3%</p>
+        <h3>Brand fit</h3>
+        <p>Does it sound like Magnum, sitting next to everything else we make?</p>
+      </div>
+    </div>
+
+    <p class="sec-sub rv rv-d2" style="max-width:60ch;margin-top:2rem">
+      Highest combined score wins. Judges' decisions are final. In a tie, tied entrants
+      answer a mathematical skill-testing question unaided, as required by Canadian law.
+    </p>
+  </div>
+</section>
+
+<!-- ======================= RULES ======================= -->
+<section class="section section--paper" id="rules">
+  <div class="wrap">
+    <div class="rv">
+      <p class="eyebrow">The fine print</p>
+      <h2 class="sec-title">Official contest<br>rules.</h2>
+      <p class="sec-sub">
+        The summary below is for convenience. The full Official Rules govern the contest —
+        <a href="#" class="tbd" style="color:inherit">[LINK TO FULL OFFICIAL RULES]</a>.
+      </p>
+    </div>
+
+    <div class="rules rv rv-d1">
+
+      <details class="rule">
+        <summary>1 · Contest period <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>The Contest begins <span class="tbd">[START DATE]</span> at <span class="tbd">[TIME]</span> ET and ends <span class="tbd">[END DATE]</span> at <span class="tbd">[TIME]</span> ET. Entries received outside the Contest Period will not be accepted.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>2 · Who can enter <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>Open only to legal residents of <b>Canada, excluding Quebec</b>, who have reached the age of majority in their province or territory of residence at the time of entry. Void in Quebec and where otherwise prohibited by law.</p>
+          <p>Employees, officers and directors of Magnum Nutraceuticals Inc. and its affiliates and agencies, and their immediate family or household members, are not eligible.</p>
+          <p><b>Limit one entry per person.</b> Multiple entries using multiple email addresses or identities will be disqualified.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>3 · How to enter <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p><b>No purchase necessary.</b> Submit a valid email address, verify it, open the unique link you're sent, and complete this entry form — a proposed name, your rationale, and the other required answers.</p>
+          <p>You must check the eligibility box before submitting. Entries without it are not accepted. Marketing opt-in is separate and has no effect on eligibility. You'll get a confirmation email on successful submission.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>4 · Selection of winner <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>A panel of Magnum Nutraceuticals Inc. representatives judges entries on originality (33.3%), relevance to the product (33.3%) and brand fit (33.3%). Highest combined score wins, at the judges' sole discretion. Decisions are final.</p>
+          <p>This contest is a test of skill and judgment. <b>No random draw or element of chance is used.</b> Ties are broken by a mathematical skill-testing question answered without assistance.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>5 · Prize <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>One (1) winner receives a one-year supply of Magnum Nutraceuticals Inc. protein powder — fourteen (14) two-pound tubs. The winner selects preferred flavour(s) and protein type(s) from the current line, subject to availability; unavailable selections are substituted with comparable products of equal or greater value.</p>
+          <p>Approximate total retail value <b>$1,000 CAD</b>. No cash value, not transferable or redeemable for cash. Magnum reserves the right to substitute a prize of equal or greater value.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>6 · Winner notification <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>The potential winner is notified by email within three (3) business days of selection, at the address given at entry, and must respond within five (5) days, correctly answer the skill-testing question if applicable, and sign and return a Declaration and Intellectual Property Release Form to claim the prize.</p>
+          <p>If the potential winner can't be reached, doesn't respond in time, doesn't return the release, or doesn't meet an eligibility requirement, Magnum may select an alternate winner or not award the prize.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>7 · Use of your submitted name <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>By submitting a name you grant Magnum Nutraceuticals Inc. a perpetual, irrevocable, worldwide, royalty-free licence to use, adapt, modify, register as a trademark and commercially exploit that name and any associated ideas, without further compensation, credit or approval.</p>
+          <p>You confirm your name is original, infringes no third party's rights, and is not obscene or otherwise inappropriate. Magnum may disqualify any entry that breaches this at its sole discretion, and is under no obligation to use any submitted name — including the winning one.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>8 · Publicity and privacy <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>By accepting the prize the winner consents to Magnum using their name, city/province of residence and entry for advertising and promotional purposes related to this contest, in any media, without additional compensation, except where prohibited by law.</p>
+          <p>Personal information is used solely to administer the contest and, where separately consented to, for marketing — in line with Magnum's <a href="https://magnumsupps.com/policies/privacy-policy">Privacy Policy</a>, PIPEDA and provincial privacy law. You can withdraw marketing consent at any time.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>9 · General conditions <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>Magnum may cancel, terminate, modify or suspend the contest if a virus, bug, unauthorized intervention, fraud or other cause beyond its control corrupts the administration, security or proper play of the contest, and may disqualify anyone tampering with the entry process.</p>
+          <p>Magnum is not responsible for lost, late, incomplete, illegible, misdirected or garbled entries, or for technical failures of any kind. By entering you agree to release and hold harmless Magnum Nutraceuticals Inc. and its officers, directors, employees and agents from any liability arising from participation or from acceptance or use of the prize.</p>
+          <p>This contest is governed by the laws of the Province of Ontario and the federal laws of Canada applicable therein.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>10 · Questions <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>Questions about this contest may be directed to <span class="tbd">[CONTACT EMAIL]</span>.</p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid">
+      <div>
+        <p class="foot__mark">MAGNUM</p>
+        <p>
+          Sponsor: Magnum Nutraceuticals Inc.<br>
+          Effective date: <span class="tbd">[DATE]</span>
+        </p>
+      </div>
+      <div class="foot__nav">
+        <p>
+          <a href="#rules">Official Contest Rules</a><br>
+          <a href="https://magnumsupps.com/policies/privacy-policy">Privacy Policy</a><br>
+          <a href="https://magnumsupps.com">magnumsupps.com</a>
+        </p>
+      </div>
+    </div>
+
+    <p class="foot__legal">
+      <b style="color:var(--paper)">No purchase necessary.</b> Contest open to legal residents of Canada, excluding
+      Quebec, who have reached the age of majority in their province or territory of residence.
+      Void in Quebec and where prohibited. One entry per person. Winner selected by judging on
+      skill — no random draw. Approximate retail value of prize: $1,000 CAD. Odds of winning
+      depend on the number and quality of eligible entries received. Contest runs
+      <span class="tbd">[START DATE]</span> – <span class="tbd">[END DATE]</span>. Full Official Rules govern.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Sticky bar + scroll progress ---------- */
+  var bar  = document.getElementById('bar');
+  var prog = document.getElementById('prog');
+  var ticking = false;
+
+  function onScroll(){
+    var y = window.scrollY;
+    bar.classList.toggle('is-stuck', y > 40);
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    prog.style.width = (h > 0 ? Math.min(y / h, 1) * 100 : 0) + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if (!ticking){ ticking = true; window.requestAnimationFrame(onScroll); }
+  }, {passive:true});
+  onScroll();
+
+  /* ---------- Scroll reveal ---------- */
+  var targets = document.querySelectorAll('.rv, #sources');
+  if ('IntersectionObserver' in window && !reduce){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); }
+      });
+    }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+    targets.forEach(function(t){ io.observe(t); });
+  } else {
+    targets.forEach(function(t){ t.classList.add('is-in'); });
+  }
+
+  /* ---------- SIGNATURE: live tub label ---------- */
+  var nameInput = document.getElementById('nameInput');
+  var tubNames  = [document.getElementById('tubName'),  document.getElementById('tubName2')];
+  var tubQuats  = [document.getElementById('tubQuattro'), document.getElementById('tubQuattro2')];
+  var nameNum   = document.getElementById('nameNum');
+  var nameCount = document.getElementById('nameCount');
+
+  /* The name is rotated, so its length is bounded by the panel's HEIGHT.
+     Scale the type down as the name grows so it never clips. */
+  function fitName(el){
+    var panel = el.closest('.tub__panel');
+    var stack = el.closest('.tub__stack');
+    if (!panel || !stack) return;
+    if (panel.clientWidth <= 0) return;
+    // .tub__stack is max-height:100%, so its clientHeight is the space
+    // actually available inside the panel's padding box, while scrollHeight
+    // is the real content length. Compare those two rather than the panel's
+    // clientHeight, which would wrongly include padding. Measuring the stack
+    // also accounts for QUATTRO, which shares the panel when switched on.
+    var size = Math.round(panel.clientWidth * 0.38);
+    el.style.fontSize = size + 'px';
+    while (stack.scrollHeight > stack.clientHeight && size > 7){
+      size -= 1;
+      el.style.fontSize = size + 'px';
+    }
+  }
+
+  function paintName(){
+    var v = nameInput.value.trim();
+    tubNames.forEach(function(el){
+      el.textContent = v || 'Your name here';
+      el.classList.toggle('is-empty', !v);
+      fitName(el);
+    });
+    nameNum.textContent = nameInput.value.length;
+    nameCount.classList.toggle('is-over', nameInput.value.length >= 28);
+  }
+  window.addEventListener('resize', paintName, {passive:true});
+  nameInput.addEventListener('input', paintName);
+
+  /* ---------- Q1 drives the lockup + conditional follow-ups ---------- */
+  var condYes = document.getElementById('condYes');
+  var condNo  = document.getElementById('condNo');
+  var whyYes  = document.getElementById('whyYes');
+  var whyNo   = document.getElementById('whyNo');
+
+  document.querySelectorAll('input[name="quattro"]').forEach(function(r){
+    r.addEventListener('change', function(){
+      var yes = this.value === 'yes';
+      condYes.classList.toggle('is-on', yes);
+      condNo.classList.toggle('is-on', !yes);
+      tubQuats.forEach(function(el){ el.dataset.on = yes ? 'true' : 'false'; });
+      // Only the visible follow-up is required.
+      whyYes.required = yes;
+      whyNo.required  = !yes;
+      validate();
+    });
+  });
+
+  /* ---------- Rationale counter ---------- */
+  var rationale = document.getElementById('rationale');
+  var ratNum    = document.getElementById('ratNum');
+  rationale.addEventListener('input', function(){
+    ratNum.textContent = rationale.value.length;
+    validate();
+  });
+
+  /* ---------- Gate the submit button ---------- */
+  var form       = document.getElementById('entryForm');
+  var eligible   = document.getElementById('eligible');
+  var submitBtn  = document.getElementById('submitBtn');
+  var submitNote = document.getElementById('submitNote');
+
+  function chosen(){
+    var r = form.querySelector('input[name="quattro"]:checked');
+    return r ? r.value : null;
+  }
+
+  function validate(){
+    var q      = chosen();
+    var why    = q === 'yes' ? whyYes.value.trim() : (q === 'no' ? whyNo.value.trim() : '');
+    var ready  = !!q && !!why && !!nameInput.value.trim()
+                 && !!rationale.value.trim() && eligible.checked;
+
+    submitBtn.setAttribute('aria-disabled', ready ? 'false' : 'true');
+
+    if (ready){
+      submitNote.textContent = 'You can submit. You get one entry, so read it over first.';
+    } else if (!eligible.checked){
+      submitNote.textContent = 'Confirm your eligibility above to submit.';
+    } else {
+      submitNote.textContent = 'Answer every required question to submit.';
+    }
+    return ready;
+  }
+
+  ['input','change'].forEach(function(ev){
+    form.addEventListener(ev, validate);
+  });
+
+  /* ---------- Submit -> confirmation ----------
+     Review build only: nothing is sent anywhere. Wire this to the real
+     entry endpoint (Klaviyo / Shopify form / Google Form) before launch. */
+  var confirmPanel = document.getElementById('confirmPanel');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!validate()){
+      var bad = form.querySelector('input[name="quattro"]:checked') ? null
+              : form.querySelector('input[name="quattro"]');
+      (bad || nameInput).focus();
+      return;
+    }
+
+    document.getElementById('cName').textContent    = nameInput.value.trim();
+    document.getElementById('cQuattro').textContent =
+      chosen() === 'yes' ? 'Keep it' : 'Drop it';
+
+    form.style.display = 'none';
+    confirmPanel.classList.add('is-on');
+    confirmPanel.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block:'center'});
+  });
+
+  paintName();
+  validate();
+})();
+</script>
+
+</body>
+</html>
