@@ -609,6 +609,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 /* --------------------------------------------------------------------------
    PRIZE — the single gold moment
    -------------------------------------------------------------------------- */
+/* Sits above the grid so it labels the whole section, not just the numeral */
+.prize__eyebrow{
+  margin-bottom:clamp(2rem,4.5vw,3.5rem);
+}
+
 .prize{
   display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
   gap:clamp(2rem,5vw,4rem);align-items:center;
@@ -1169,9 +1174,10 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 <!-- ======================= PRIZE ======================= -->
 <section class="section section--dark on-dark" id="prize">
   <div class="wrap">
+    <p class="eyebrow eyebrow--light prize__eyebrow rv">The prize</p>
+
     <div class="prize">
       <div class="rv">
-        <p class="eyebrow eyebrow--light">The prize</p>
         <p class="prize__num">14</p>
         <p class="prize__numsub">Two-pound tubs</p>
       </div>
