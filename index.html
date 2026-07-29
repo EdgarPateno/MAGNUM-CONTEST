@@ -1363,7 +1363,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
             </div>
           </fieldset>
 
-          <!-- Consent -->
+          <!-- Submit -->
           <fieldset class="fset">
             <legend class="fset__lg">
               <span class="fset__n">03</span>
@@ -1785,7 +1785,14 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
   /* ---------- Submit -> confirmation ----------
      Review build only: nothing is sent anywhere. Wire this to the real
-     entry endpoint (Klaviyo / Shopify form / Google Form) before launch. */
+     entry endpoint (Klaviyo / Shopify form / Google Form) before launch.
+
+     IMPORTANT when wiring that endpoint: this form no longer collects marketing
+     consent. The opt-in checkbox was removed, so an entrant has given NO express
+     consent under CASL. Do not add entrants to a marketing list from this form —
+     entry data is for administering the contest only. The privacy paragraph in the
+     rules ("where separately consented to, for marketing") is only true while that
+     holds. Capture consent separately if marketing signup is wanted. */
   var confirmPanel = document.getElementById('confirmPanel');
 
   form.addEventListener('submit', function(e){
