@@ -597,9 +597,13 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   margin-bottom:clamp(2rem,4.5vw,3.5rem);
 }
 
+/* The "14 / two-pound tubs" numeral block was removed and the heading took its place
+   in the left column, so the list keeps the right column instead of the section
+   running half-empty. align-items:start (was center) because the heading is now much
+   shorter than the list and centering it looked adrift. */
 .prize{
   display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
-  gap:clamp(2rem,5vw,4rem);align-items:center;
+  gap:clamp(2rem,5vw,4rem);align-items:start;
 }
 @media(max-width:900px){.prize{grid-template-columns:1fr}}
 
@@ -1165,12 +1169,10 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
     <div class="prize">
       <div class="rv">
-        <p class="prize__num">14</p>
-        <p class="prize__numsub">Two-pound tubs</p>
+        <h2 class="sec-title">A year of protein,<br>built your way.</h2>
       </div>
 
       <div class="rv rv-d1">
-        <h2 class="sec-title">A year of protein,<br>built your way.</h2>
         <ul class="prize__list">
           <li>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
@@ -1370,11 +1372,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
           <!-- Submit -->
           <fieldset class="fset">
-            <legend class="fset__lg">
-              <span class="fset__n">03</span>
-              <span class="fset__t">Before you submit</span>
-            </legend>
-
             <p class="field__h">
               By submitting, you confirm that you have reached the age of majority in your
               province or territory of residence, that you are a legal resident of Canada
