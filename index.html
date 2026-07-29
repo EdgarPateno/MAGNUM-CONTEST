@@ -847,6 +847,10 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   display:flex;flex-wrap:wrap;align-items:center;gap:1.25rem;
 }
 .submit-note{font-size:0.8125rem;color:var(--n-700);max-width:30ch;line-height:1.5}
+/* With the consent checkboxes gone, the submit row is the first thing after the
+   legend. Its top rule would sit directly under the legend's bottom rule with a
+   band of dead space between them. Only applies when nothing precedes it. */
+.fset__lg + .submit-row{margin-top:0;padding-top:0;border-top:0}
 
 /* Confirmation state */
 .confirm{display:none;border:1px solid rgba(74,168,117,0.5);padding:0.5rem;background:rgba(74,168,117,0.07)}
@@ -1366,24 +1370,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
               <span class="fset__t">Before you submit</span>
             </legend>
 
-            <label class="check check--req" for="eligible">
-              <input type="checkbox" id="eligible" name="eligible" required>
-              <span class="check__t">
-                I confirm that I have reached the age of majority in my province or territory of
-                residence, that I am a resident of Canada excluding Quebec, and that I have read
-                and agree to the <a href="#rules">Official Contest Rules</a>.
-                <small>Required. Entries submitted without this confirmation are not accepted.</small>
-              </span>
-            </label>
-
-            <label class="check" for="marketing">
-              <input type="checkbox" id="marketing" name="marketing">
-              <span class="check__t">
-                Sign me up for Magnum marketing emails.
-                <small>Optional. This has no effect on your entry or your chance of winning.</small>
-              </span>
-            </label>
-
             <div class="submit-row">
               <button class="btn btn--gold" type="submit" id="submitBtn" aria-disabled="true">
                 Submit my entry
@@ -1392,7 +1378,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
                 </span>
               </button>
               <p class="submit-note" id="submitNote">
-                Confirm your eligibility above to submit.
+                Answer every required question to submit.
               </p>
             </div>
           </fieldset>
@@ -1549,7 +1535,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         <summary>3 · How to enter <span class="rule__pm" aria-hidden="true"></span></summary>
         <div class="rule__body">
           <p><b>No purchase necessary.</b> Submit a valid email address, verify it, open the unique link you're sent, and complete this entry form — a proposed name, your rationale, and the other required answers.</p>
-          <p>You must check the eligibility box before submitting. Entries without it are not accepted. Marketing opt-in is separate and has no effect on eligibility. You'll get a confirmation email on successful submission.</p>
+          <p>By submitting an entry you confirm that you have reached the age of majority in your province or territory of residence, that you are a resident of Canada excluding Quebec, and that you have read and agree to the Official Contest Rules. You'll get a confirmation email on successful submission.</p>
         </div>
       </details>
 
@@ -1771,7 +1757,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
   /* ---------- Gate the submit button ---------- */
   var form       = document.getElementById('entryForm');
-  var eligible   = document.getElementById('eligible');
   var submitBtn  = document.getElementById('submitBtn');
   var submitNote = document.getElementById('submitNote');
 
@@ -1784,17 +1769,13 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
     var q      = chosen();
     var why    = q === 'yes' ? whyYes.value.trim() : (q === 'no' ? whyNo.value.trim() : '');
     var ready  = !!q && !!why && !!nameInput.value.trim()
-                 && !!rationale.value.trim() && eligible.checked;
+                 && !!rationale.value.trim();
 
     submitBtn.setAttribute('aria-disabled', ready ? 'false' : 'true');
 
-    if (ready){
-      submitNote.textContent = 'You can submit. You get one entry, so read it over first.';
-    } else if (!eligible.checked){
-      submitNote.textContent = 'Confirm your eligibility above to submit.';
-    } else {
-      submitNote.textContent = 'Answer every required question to submit.';
-    }
+    submitNote.textContent = ready
+      ? 'You can submit. You get one entry, so read it over first.'
+      : 'Answer every required question to submit.';
     return ready;
   }
 
