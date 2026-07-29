@@ -847,9 +847,10 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   display:flex;flex-wrap:wrap;align-items:center;gap:1.25rem;
 }
 .submit-note{font-size:0.8125rem;color:var(--n-700);max-width:30ch;line-height:1.5}
-/* With the consent checkboxes gone, the submit row is the first thing after the
-   legend. Its top rule would sit directly under the legend's bottom rule with a
-   band of dead space between them. Only applies when nothing precedes it. */
+/* Guard for a fieldset whose submit row is the first thing after the legend: without
+   it the legend's bottom rule and the submit row's top rule stack with a band of dead
+   space between them. Not currently matched (step 03 has an attestation line above the
+   row) — kept so removing that line does not silently reintroduce the gap. */
 .fset__lg + .submit-row{margin-top:0;padding-top:0;border-top:0}
 
 /* Confirmation state */
@@ -1369,6 +1370,13 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
               <span class="fset__n">03</span>
               <span class="fset__t">Before you submit</span>
             </legend>
+
+            <p class="field__h">
+              By submitting, you confirm that you have reached the age of majority in your
+              province or territory of residence, that you are a legal resident of Canada
+              excluding Quebec, and that you have read and agree to the
+              <a href="#rules">Official Contest Rules</a>.
+            </p>
 
             <div class="submit-row">
               <button class="btn btn--gold" type="submit" id="submitBtn" aria-disabled="true">
