@@ -20,15 +20,21 @@ Every one is highlighted in gold on the page so it can be spotted visually:
 
 | Placeholder | Needed for |
 |---|---|
-| `[START DATE]` / `[END DATE]` / `[TIME]` | Contest period, Official Rules §1 |
+| `[START DATE]` / `[END DATE]` / `[TIME]` | Contest period, Official Rules §1, "Entries close" panel, footer strip |
 | `[CONTACT EMAIL]` | Official Rules §11 |
-| `[LINK TO FULL OFFICIAL RULES]` | Required link from the entry form |
 | `[DATE]` | Rules effective date |
-| `entrant@email.com` | Verified-entrant address, injected per unique link |
 
-Also open: whether exact protein-source ratios can be disclosed. The bars in the
-formula section currently show **order of inclusion only**, and are labelled as
-such.
+`entrant@email.com` (two places) is **not** a placeholder to fill by hand — it is the
+verified entrant's own address, injected at runtime from their unique link. It stays
+until the form is wired to a real endpoint.
+
+### Resolved
+
+- **Full Official Rules link** — there is no separate rules document; the rules on this
+  page are the Official Rules. The dangling `href="#"` was removed and the lead-in
+  reworded to say so.
+- **Protein-source ratios** — staying order-of-inclusion only. The internal
+  "confirm before publishing" note has been removed from the page.
 
 ## Contest terms reflected on the page
 
