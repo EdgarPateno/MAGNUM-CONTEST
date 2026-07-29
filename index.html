@@ -855,11 +855,9 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   display:flex;flex-wrap:wrap;align-items:center;gap:1.25rem;
 }
 .submit-note{font-size:0.8125rem;color:var(--n-700);max-width:30ch;line-height:1.5}
-/* Guard for a fieldset whose submit row is the first thing after the legend: without
-   it the legend's bottom rule and the submit row's top rule stack with a band of dead
-   space between them. Not currently matched (step 03 has an attestation line above the
-   row) — kept so removing that line does not silently reintroduce the gap. */
-.fset__lg + .submit-row{margin-top:0;padding-top:0;border-top:0}
+/* Under 900px .prize collapses to one column and its 2rem gap stacks on top of
+   .prize__list's own 2rem top margin, doubling the space under the heading. */
+@media(max-width:900px){.prize__list{margin-top:0}}
 
 /* Confirmation state */
 .confirm{display:none;border:1px solid rgba(74,168,117,0.5);padding:0.5rem;background:rgba(74,168,117,0.07)}
@@ -1369,8 +1367,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
             </div>
           </fieldset>
 
-          <!-- Submit -->
-          <fieldset class="fset">
+          <!-- Submit. A div, not a fieldset: with the "03" legend gone this would be a
+               group with no accessible name, which screen readers announce as an unnamed
+               grouping boundary for no benefit. .fset is border:0/padding:0/margin only,
+               so a div renders identically. -->
+          <div class="fset">
             <p class="field__h">
               By submitting, you confirm that you have reached the age of majority in your
               province or territory of residence, that you are a legal resident of Canada
@@ -1389,7 +1390,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
                 Answer every required question to submit.
               </p>
             </div>
-          </fieldset>
+          </div>
 
         </form>
 
