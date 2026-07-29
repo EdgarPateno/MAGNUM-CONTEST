@@ -1,0 +1,24 @@
+{
+  "name": "magnum-contest-site",
+  "version": "1.0.0",
+  "description": "Landing page for Magnum Nutraceuticals' **\"Name Our New Protein\"** contest.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EdgarPateno/MAGNUM-CONTEST.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/EdgarPateno/MAGNUM-CONTEST/issues"
+  },
+  "homepage": "https://github.com/EdgarPateno/MAGNUM-CONTEST#readme",
+  "dependencies": {
+    "motion": "^12.43.0"
+  }
+}

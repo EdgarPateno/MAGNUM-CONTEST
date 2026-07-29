@@ -636,31 +636,68 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 /* --------------------------------------------------------------------------
    FORMULA
    -------------------------------------------------------------------------- */
+/* Dark card on the cream page: the spec strip is the one place in the formula
+   section that should stop the eye, and it echoes the prize band further down.
+   Asymmetric on purpose — 30g is the headline number, the other two support it. */
 .spec{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:1px;background:rgba(10,10,10,0.12);
-  border:1px solid rgba(10,10,10,0.12);
+  display:grid;grid-template-columns:1.35fr 1fr 1fr;
+  gap:1px;background:rgba(255,255,255,0.12);
+  border:1px solid var(--ink);background-color:var(--ink);
   margin-top:clamp(2.5rem,5vw,3.5rem);
+  border-radius:2px;overflow:hidden;
 }
-@media(max-width:700px){.spec{grid-template-columns:1fr}}
+@media(max-width:820px){.spec{grid-template-columns:1fr 1fr}
+  .spec__i--lead{grid-column:1 / -1}}
+@media(max-width:520px){.spec{grid-template-columns:1fr}
+  .spec__i--lead{grid-column:auto}}
 /* Flex column + margin-top:auto on the label bottom-aligns every label
    across the row, so differing key sizes don't stagger them. */
 .spec__i{
-  background:var(--paper);padding:1.9rem 1.6rem;
-  display:flex;flex-direction:column;
+  position:relative;background:var(--ink);color:var(--cream);
+  padding:1.7rem 1.6rem 1.6rem;
+  display:flex;flex-direction:column;justify-content:space-between;gap:0.6rem;
+  transition:background-color .25s ease;
 }
+.spec__i--lead{background:var(--ink-raise)}
+/* Index marker, matching the 01/02 language the entry form already uses. */
+.spec__ix{
+  font-family:var(--label);font-weight:700;font-size:0.75rem;
+  letter-spacing:0.22em;color:var(--gold);margin-bottom:1.1rem;
+}
+/* Cells stretch to the tallest (the lead numeral drives it), so distribute rather
+   than bottom-align: auto margins gave different results per cell because the lead
+   has a note the others don't, which read as accidental voids. */
 .spec__k{
   font-family:var(--label);font-weight:900;
-  font-size:clamp(2.2rem,4.6vw,3rem);line-height:1;letter-spacing:-0.015em;
+  font-size:clamp(2.4rem,5vw,3.4rem);line-height:1;letter-spacing:-0.015em;
+  color:var(--paper);
 }
-.spec__k small{font-size:0.42em;font-weight:700;color:var(--blue);margin-left:0.15em}
+.spec__i--lead .spec__k{font-size:clamp(3rem,6vw,4.2rem);color:var(--gold)}
+.spec__k small{font-size:0.42em;font-weight:700;color:var(--gold);margin-left:0.12em}
+.spec__i--lead .spec__k small{color:var(--paper);opacity:0.65}
 /* Labels carry the message here, so they're sized to hold their own against
    the numeral rather than sitting under it as fine print. */
 .spec__v{
-  margin-top:auto;padding-top:0.9rem;
+  padding-top:0.85rem;
   font-family:var(--label);font-weight:900;
-  font-size:clamp(1.15rem,2.1vw,1.5rem);line-height:1.05;
-  letter-spacing:0.02em;text-transform:uppercase;color:var(--ink);
+  font-size:clamp(1.05rem,1.9vw,1.35rem);line-height:1.1;
+  letter-spacing:0.02em;text-transform:uppercase;color:var(--cream);
+}
+.spec__note{
+  margin-top:0.55rem;font-size:0.8125rem;line-height:1.45;
+  color:var(--n-500);
+}
+/* A gold rule wipes across the top of a hovered cell. transform-origin left so it
+   reads as a sweep, not a grow-from-centre. */
+.spec__i::after{
+  content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;transition:transform .3s ease;
+}
+.spec__i:hover{background:var(--carbon)}
+.spec__i--lead:hover{background:var(--carbon)}
+.spec__i:hover::after{transform:scaleX(1)}
+@media(prefers-reduced-motion:reduce){
+  .spec__i,.spec__i::after{transition:none}
 }
 /* Word-based key ("Lactose free") needs less size than a two-glyph numeral
    to occupy the same optical width. */
@@ -992,6 +1029,24 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 <!-- Set before first paint: enables the reveal animations only when JS is
      running, so the page degrades to fully-visible rather than blank. -->
 <script>document.documentElement.className+=' js';</script>
+<style>
+  /* Start state for Motion-driven items. Gated behind .motion-enabled, which only
+     the script below adds — so if motion.js 404s or is blocked, the spec cells are
+     never hidden in the first place. */
+  .motion-enabled [data-motion-item]{opacity:0;transform:translateY(16px)}
+</style>
+<script>
+  /* Reduced-motion users never get the hidden state at all. The 2s timeout is the
+     safety net: if Motion never initialises, we drop the class and the content
+     appears rather than staying invisible forever. */
+  (function(){
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.documentElement.classList.add('motion-enabled');
+    setTimeout(function(){
+      if (!window.__motionReady) document.documentElement.classList.remove('motion-enabled');
+    }, 2000);
+  })();
+</script>
 </head>
 <body>
 
@@ -1206,18 +1261,24 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
       </p>
     </div>
 
-    <div class="spec rv rv-d1">
-      <div class="spec__i">
-        <p class="spec__k">30<small>g</small></p>
+    <div class="spec" data-motion-group>
+      <div class="spec__i spec__i--lead" data-motion-item>
+        <span class="spec__ix" aria-hidden="true">01</span>
+        <p class="spec__k">
+          <span class="spec__count" data-count-to="30">30</span><small>g</small>
+        </p>
         <p class="spec__v">Protein per scoop</p>
+        <p class="spec__note">Four sources, one blend.</p>
       </div>
-      <div class="spec__i">
+      <div class="spec__i" data-motion-item>
+        <span class="spec__ix" aria-hidden="true">02</span>
         <p class="spec__k spec__k--text">Lactose free</p>
         <p class="spec__v">Non-vegan</p>
       </div>
-      <div class="spec__i">
-        <p class="spec__k">Full</p>
-        <p class="spec__v">Amino acid profile &#183; BCAAs</p>
+      <div class="spec__i" data-motion-item>
+        <span class="spec__ix" aria-hidden="true">03</span>
+        <p class="spec__k spec__k--text">Full profile</p>
+        <p class="spec__v">Amino acids &#183; BCAAs</p>
       </div>
     </div>
 
@@ -1824,6 +1885,57 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
   paintName();
   validate();
+})();
+</script>
+
+<!-- Motion (motion.dev), vendored locally as the UMD build — no CDN, no external
+     request. ~45kb gzipped. Attaches window.Motion. -->
+<script src="motion.js" defer></script>
+<script defer>
+(function(){
+  function init(){
+    var M = window.Motion;
+    // No Motion means the guard's 2s timeout reveals everything. Bail quietly.
+    if (!M) return;
+    window.__motionReady = true;
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var duration = reduce ? 0 : 0.5;
+
+    document.querySelectorAll('[data-motion-group]').forEach(function(group){
+      var items = group.querySelectorAll('[data-motion-item]');
+      if (!items.length) return;
+
+      M.inView(group, function(){
+        M.animate(items, { opacity:1, y:0 }, {
+          duration: duration,
+          delay: M.stagger(reduce ? 0 : 0.09),
+          ease: 'easeOut'
+        });
+
+        // Count the headline figure up to its final value. The HTML already
+        // contains "30", so no-JS and reduced-motion both read correctly and this
+        // only ever replaces it with the same number.
+        var counter = group.querySelector('[data-count-to]');
+        if (counter && !reduce){
+          var to = Number(counter.getAttribute('data-count-to'));
+          if (to){
+            M.animate(0, to, {
+              duration: 1.1,
+              ease: 'easeOut',
+              onUpdate: function(v){ counter.textContent = Math.round(v); }
+            });
+          }
+        }
+      }, { amount: 0.35 });
+    });
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script>
 
