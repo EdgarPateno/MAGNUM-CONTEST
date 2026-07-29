@@ -760,6 +760,10 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   display:block;font-size:0.8125rem;line-height:1.5;
   color:var(--n-700);margin:-0.25rem 0 0.7rem;font-weight:400;
 }
+/* There is no global a{} rule in this file. The attestation's rules link used to be
+   styled by .check__t a, which went away with the consent checkbox — without this it
+   falls back to UA default #0000EE, and visited purple. Mirrors .check__t a. */
+.field__h a{color:var(--blue);font-weight:600;text-underline-offset:3px}
 
 .inp,.ta,.sel{
   width:100%;
