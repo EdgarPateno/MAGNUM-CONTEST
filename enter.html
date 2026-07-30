@@ -59,7 +59,6 @@
 
   /* Motion */
   --ease:cubic-bezier(0.32,0.72,0,1);
-  --ease-out:cubic-bezier(0.22,1,0.36,1);
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -114,22 +113,10 @@ h1,h2,h3,h4{
 .eyebrow--light{color:var(--blue-lift)}
 .eyebrow--light::before{background:var(--blue-lift)}
 
-.sec-title{font-size:clamp(2.25rem,5.4vw,4.25rem)}
-.sec-sub{
-  max-width:44ch;
-  margin:1.4rem 0 0;
-  font-size:1.0625rem;
-  line-height:1.65;
-  color:var(--n-700);
-}
-
 /* --------------------------------------------------------------------------
    Layout primitives
    -------------------------------------------------------------------------- */
 .wrap{max-width:var(--max);margin:0 auto;padding-inline:var(--gut)}
-
-.section{padding-block:var(--sec-y)}
-.section--cream{background:var(--cream)}
 
 /* --------------------------------------------------------------------------
    Buttons — squared, per theme buttons_radius:0
@@ -262,12 +249,14 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .hero__eyebrow{margin-bottom:clamp(1.75rem,4vw,2.75rem)}
 
 /* Text column can breathe; the card is capped so the form never gets wide
-   enough for the checkbox copy to run past a comfortable measure. */
+   enough for the checkbox copy to run past a comfortable measure. Centred
+   rather than top-aligned: the title is now short enough that top-aligning it
+   against a form-height card leaves it stranded at the top of the row. */
 .hero__grid{
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,28rem);
   gap:clamp(2.25rem,5vw,4.5rem);
-  align-items:start;
+  align-items:center;
 }
 @media(max-width:980px){
   .hero__grid{grid-template-columns:1fr;gap:2.75rem}
@@ -284,30 +273,12 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   font-style:normal;
   color:var(--blue-lift);
 }
-.hero__lede{
-  max-width:38ch;margin:1.9rem 0 0;
-  font-size:clamp(1.0625rem,1.7vw,1.25rem);
-  line-height:1.55;color:var(--n-300);
-}
-.hero__lede b{color:var(--paper);font-weight:600}
 
-/* Prize figure — the one gold moment on this page besides the CTA */
-.stat{
-  margin-top:2.25rem;padding-top:1.75rem;
-  border-top:1px solid rgba(255,255,255,0.16);
-  display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;
-}
-.stat__fig{
-  font-family:var(--label);font-weight:900;
-  font-size:clamp(2.75rem,6vw,3.75rem);line-height:0.85;
-  color:var(--gold);letter-spacing:-0.01em;
-}
-.stat__t{font-size:0.9375rem;line-height:1.5;color:var(--n-300);max-width:24ch}
-.stat__t b{color:var(--paper);font-weight:600;display:block}
-
+/* Sits directly under the h1 now that the lede and prize figure are gone, so
+   it carries the whole gap on its own. */
 .npn{
   display:inline-flex;align-items:center;gap:0.6rem;
-  margin-top:1.6rem;padding:0.5rem 0.85rem;
+  margin-top:clamp(1.75rem,3.5vw,2.5rem);padding:0.5rem 0.85rem;
   border:1px solid rgba(255,255,255,0.2);
   font-family:var(--body);
   font-size:0.6875rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;
@@ -331,15 +302,17 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   border:1px solid rgba(255,255,255,0.07);
   padding:clamp(1.6rem,3.4vw,2.25rem);
 }
-.gate__step{
-  font-family:var(--body);
-  font-size:0.625rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
-  color:var(--blue);margin:0 0 0.85rem;
-}
 .gate h2{font-size:clamp(1.6rem,3.4vw,2.1rem);letter-spacing:-0.035em}
-.gate__lede{
-  margin:0.85rem 0 1.75rem;
-  font-size:0.9375rem;line-height:1.6;color:var(--n-700);
+
+/* The card's only prose, in both the form and the sent state. Full sentences,
+   so it drops off the display line-height (0.9) onto something readable and
+   stays under the h2 display size. */
+.gate__ask{
+  font-size:clamp(1.125rem,2.2vw,1.375rem);
+  line-height:1.3;
+  letter-spacing:-0.025em;
+  margin:0 0 1.9rem;
+  text-wrap:pretty;
 }
 
 /* --------------------------------------------------------------------------
@@ -438,31 +411,8 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .sent{display:none}
 .sent.is-on{display:block;animation:slip .6s var(--ease) both}
 .sent__ic{width:2.75rem;height:2.75rem;stroke:var(--green);fill:none;stroke-width:1.8;margin-bottom:1.25rem}
-.sent h2{font-size:clamp(1.6rem,3.4vw,2.1rem);letter-spacing:-0.035em;margin-bottom:0.9rem}
 .sent p{margin:0 0 0.9rem;font-size:0.9375rem;line-height:1.6;color:var(--n-700)}
 .sent p b{color:var(--ink);font-weight:600;word-break:break-word}
-.sent dl{
-  margin:1.5rem 0 0;padding-top:1.35rem;border-top:1px solid rgba(10,10,10,0.12);
-  display:grid;grid-template-columns:auto minmax(0,1fr);gap:0.7rem 1.25rem;
-  font-size:0.875rem;
-}
-.sent dt{
-  font-size:0.6875rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;
-  color:var(--n-700);padding-top:0.15rem;
-}
-.sent dd{margin:0;font-weight:600;word-break:break-word}
-
-.resend{
-  margin-top:1.5rem;padding-top:1.35rem;border-top:1px solid rgba(10,10,10,0.12);
-  font-size:0.8125rem;color:var(--n-700);line-height:1.55;
-}
-.linkish{
-  background:none;border:0;padding:0;margin:0;
-  font:inherit;color:var(--blue);font-weight:600;
-  text-decoration:underline;text-underline-offset:3px;cursor:pointer;
-}
-.linkish[aria-disabled="true"]{color:var(--n-500);cursor:default;text-decoration:none}
-
 /* Review-build only: stands in for clicking the link in the inbox. Marked with
    the same gold treatment as every other unresolved value on this site so it
    cannot be mistaken for production UI. */
@@ -472,39 +422,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   font-size:0.8125rem;line-height:1.5;color:var(--n-700);
 }
 .devlink a{color:var(--ink);font-weight:700;text-underline-offset:3px}
-
-/* --------------------------------------------------------------------------
-   STEPS — what happens after they submit
-   -------------------------------------------------------------------------- */
-.steps{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:1px;background:rgba(10,10,10,0.12);
-  border:1px solid rgba(10,10,10,0.12);
-  margin-top:clamp(2.5rem,5vw,3.75rem);
-}
-@media(max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:520px){.steps{grid-template-columns:1fr}}
-
-.step{background:var(--cream);padding:1.9rem 1.5rem 2rem;position:relative}
-.step--now{background:var(--ink);color:var(--paper)}
-
-.step__top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem}
-.step__n{
-  font-family:var(--label);font-weight:900;font-size:2.1rem;line-height:1;
-  color:rgba(10,10,10,0.22);
-}
-.step--now .step__n{color:var(--gold)}
-
-.step__tag{
-  font-size:0.5625rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
-  padding:0.3rem 0.5rem;display:inline-flex;align-items:center;gap:0.35rem;
-}
-.step__tag--now{color:var(--ink);background:var(--gold)}
-.step__tag--next{color:var(--n-700);border:1px solid rgba(10,10,10,0.25)}
-
-.step h3{font-size:1.25rem;letter-spacing:-0.02em;line-height:1.05;margin-bottom:0.6rem}
-.step p{margin:0;font-size:0.9375rem;line-height:1.55;color:var(--n-700)}
-.step--now p{color:var(--n-300)}
 
 /* --------------------------------------------------------------------------
    Footer
@@ -537,17 +454,9 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   padding:0 0.25em;font-weight:700;font-style:normal;
   white-space:nowrap;
 }
-.foot .tbd,.hero .tbd,.step--now .tbd{
+.foot .tbd,.hero .tbd{
   background:rgba(245,197,24,0.2);color:var(--gold);
 }
-
-/* --------------------------------------------------------------------------
-   Scroll reveal — scoped to .js so the page reads fine without JavaScript
-   -------------------------------------------------------------------------- */
-.js .rv{opacity:0;transform:translateY(2.5rem);
-    transition:opacity .85s var(--ease-out),transform .85s var(--ease-out)}
-.js .rv.is-in{opacity:1;transform:none}
-.rv-d1{transition-delay:.08s}
 
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -555,7 +464,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
     animation-duration:.001ms !important;animation-iteration-count:1 !important;
     transition-duration:.001ms !important;
   }
-  .js .rv{opacity:1;transform:none}
   .btn:hover{transform:none}
 }
 
@@ -571,9 +479,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .skip:focus{left:0}
 </style>
 
-<!-- Set before first paint: enables the reveal animations only when JS is
-     running, so the page degrades to fully-visible rather than blank. -->
-<script>document.documentElement.className+=' js';</script>
 </head>
 <body>
 
@@ -604,18 +509,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
       <div>
         <h1>Name<br>our next<em>protein.</em></h1>
-        <p class="hero__lede">
-          We built a new protein. It doesn't have a name yet. Give it one, and if our judges
-          pick yours, you drink a <b>full year of it</b> — flavour and format your call.
-        </p>
-
-        <div class="stat">
-          <span class="stat__fig">$1,000</span>
-          <span class="stat__t">
-            <b>Approximate retail value</b>
-            14 two-pound tubs. Judged on skill, not drawn at random.
-          </span>
-        </div>
 
         <p class="npn">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
@@ -630,12 +523,9 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
             <!-- Form state -->
             <form id="gateForm" novalidate>
-              <p class="gate__step">Step 1 of 2 — Verify your email</p>
-              <h2>Get your entry link.</h2>
-              <p class="gate__lede">
-                We'll email you a single-use link to the entry form. That link is how we keep
-                the contest to one entry per person — so use an inbox you can open now.
-              </p>
+              <h2 class="gate__ask">
+                Enter your email to join the contest for a chance to win a year of protein powder.
+              </h2>
 
               <div class="field" id="emailField">
                 <label class="field__l" for="email">
@@ -707,27 +597,9 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
               <svg class="sent__ic" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 6h18v12H3z" stroke-linejoin="round"/><path d="m3 7 9 6 9-6" stroke-linejoin="round"/>
               </svg>
-              <h2>Check your inbox.</h2>
-              <p>
-                We sent your entry link to <b id="sentEmail">—</b>. Open it and you'll land
-                straight on the entry form, already verified.
-              </p>
-              <p>
-                The link works once and only for this address. Don't forward it — whoever opens
-                it is the entrant.
-              </p>
-
-              <dl>
-                <dt>Sent to</dt><dd id="sentEmail2">—</dd>
-                <dt>Marketing</dt><dd id="sentMarketing">—</dd>
-                <dt>Entries close</dt><dd><span class="tbd">[END DATE]</span> at <span class="tbd">[TIME]</span> ET</dd>
-              </dl>
-
-              <p class="resend">
-                Nothing after a few minutes? Look in spam and promotions first, then
-                <button type="button" class="linkish" id="resendBtn">send it again</button>.
-                <span id="resendMsg"></span>
-              </p>
+              <h2 class="gate__ask">
+                Check your inbox, verify your email address, and click the unique link to join!
+              </h2>
 
               <p class="devlink">
                 <b>Review build:</b> no email is actually sent. To see what the verified link opens,
@@ -739,58 +611,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         </div>
       </div>
 
-    </div>
-  </div>
-</section>
-
-<!-- ======================= WHAT HAPPENS NEXT ======================= -->
-<section class="section section--cream" id="next">
-  <div class="wrap">
-    <div class="rv">
-      <p class="eyebrow">What happens next</p>
-      <h2 class="sec-title">Two steps, then<br>the fun part.</h2>
-      <p class="sec-sub">
-        Verification is the only reason this page exists. It's what lets us hold every entrant
-        to one entry, and it's how we reach you if your name wins.
-      </p>
-    </div>
-
-    <div class="steps rv rv-d1">
-      <div class="step step--now">
-        <div class="step__top">
-          <span class="step__n">1</span>
-          <span class="step__tag step__tag--now">You are here</span>
-        </div>
-        <h3>Give us your email</h3>
-        <p>Plus the eligibility confirmation. Marketing emails are optional and change nothing about your entry.</p>
-      </div>
-
-      <div class="step">
-        <div class="step__top">
-          <span class="step__n">2</span>
-          <span class="step__tag step__tag--next">Next</span>
-        </div>
-        <h3>Open the link we send</h3>
-        <p>One click in your inbox. That single click is what makes your entry count.</p>
-      </div>
-
-      <div class="step">
-        <div class="step__top">
-          <span class="step__n">3</span>
-          <span class="step__tag step__tag--next">Then</span>
-        </div>
-        <h3>Name the protein</h3>
-        <p>Read the formula, then submit your name and the thinking behind it. Judges score the thinking.</p>
-      </div>
-
-      <div class="step">
-        <div class="step__top">
-          <span class="step__n">4</span>
-          <span class="step__tag step__tag--next">After close</span>
-        </div>
-        <h3>We pick a winner</h3>
-        <p>Judged on originality, product relevance and brand fit — 33.3% each. No random draw.</p>
-      </div>
     </div>
   </div>
 </section>
@@ -830,8 +650,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 (function(){
   'use strict';
 
-  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   /* ---------- Sticky bar ---------- */
   var bar = document.getElementById('bar');
   var ticking = false;
@@ -843,19 +661,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
     if (!ticking){ ticking = true; window.requestAnimationFrame(onScroll); }
   }, {passive:true});
   onScroll();
-
-  /* ---------- Scroll reveal ---------- */
-  var targets = document.querySelectorAll('.rv');
-  if ('IntersectionObserver' in window && !reduce){
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){
-        if (e.isIntersecting){ e.target.classList.add('is-in'); io.unobserve(e.target); }
-      });
-    }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
-    targets.forEach(function(t){ io.observe(t); });
-  } else {
-    targets.forEach(function(t){ t.classList.add('is-in'); });
-  }
 
   /* ---------- The gate ---------- */
   var form       = document.getElementById('gateForm');
@@ -963,10 +768,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
   function swapToSent(){
     var value = email.value.trim();
-    document.getElementById('sentEmail').textContent  = value;
-    document.getElementById('sentEmail2').textContent = value;
-    document.getElementById('sentMarketing').textContent =
-      marketing.checked ? 'Subscribed' : 'Not subscribed';
 
     /* Review-build shortcut: carries the address to the entry form the way the
        real single-use link will. Replace with the tokenised URL from the API. */
@@ -976,34 +777,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
     form.style.display = 'none';
     sent.classList.add('is-on');
     sent.focus();
-  }
-
-  /* Resend — rate-limited in the UI so a frustrated entrant can't hammer it.
-     The real throttle belongs on the server too. */
-  var resendBtn = document.getElementById('resendBtn');
-  var resendMsg = document.getElementById('resendMsg');
-  var cooldown  = 0;
-  var timer     = null;
-
-  resendBtn.addEventListener('click', function(){
-    if (cooldown > 0) return;
-    resendMsg.textContent = ' Sent again — give it a minute.';
-    cooldown = 60;
-    resendBtn.setAttribute('aria-disabled', 'true');
-    tick();
-    timer = setInterval(tick, 1000);
-  });
-
-  function tick(){
-    if (cooldown <= 0){
-      clearInterval(timer);
-      resendBtn.setAttribute('aria-disabled', 'false');
-      resendBtn.textContent = 'send it again';
-      resendMsg.textContent = '';
-      return;
-    }
-    resendBtn.textContent = 'send it again (' + cooldown + 's)';
-    cooldown--;
   }
 
   sync();
