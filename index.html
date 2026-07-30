@@ -130,6 +130,18 @@ h1,h2,h3,h4{
 
 .section{padding-block:var(--sec-y)}
 .section--dark{background:var(--ink);color:var(--paper)}
+/* Prize sits directly above Judging, both on --ink, so their padding stacks to
+   ~300px of unbroken black with no edge to read. Collapse it and mark the join
+   with a hairline at content width — one dark chapter, two parts. */
+.section--dark + .section--dark{padding-top:0}
+/* Drawn as an inset background line rather than a border, so it lands at
+   content width like the prize list's rules instead of spanning the gutters. */
+.section--dark + .section--dark > .wrap{
+  padding-top:var(--sec-y);
+  background:linear-gradient(rgba(255,255,255,0.13),rgba(255,255,255,0.13)) no-repeat;
+  background-size:calc(100% - var(--gut) * 2) 1px;
+  background-position:var(--gut) 0;
+}
 .section--cream{background:var(--cream)}
 .section--paper{background:var(--paper)}
 
@@ -301,10 +313,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   background:
     radial-gradient(58rem 34rem at 78% 8%,rgba(7,46,170,0.55),transparent 62%),
     radial-gradient(42rem 30rem at 8% 92%,rgba(110,139,255,0.16),transparent 66%);
-  /* The prize section below is dark too, so the field has to fade out rather
-     than get clipped flat at the hero's bottom edge. */
-  -webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent 98%);
-  mask-image:linear-gradient(to bottom,#000 62%,transparent 98%);
   pointer-events:none;
 }
 /* Sits above the grid so it labels the whole hero, not just the left column */
@@ -1107,36 +1115,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   </div>
 </section>
 
-<!-- ======================= PRIZE ======================= -->
-<section class="section section--dark on-dark" id="prize">
-  <div class="wrap">
-    <p class="eyebrow eyebrow--light prize__eyebrow rv">The prize</p>
-
-    <div class="prize">
-      <div class="rv">
-        <h2 class="sec-title">A year of protein.</h2>
-      </div>
-
-      <div class="rv rv-d1">
-        <ul class="prize__list">
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
-            <span><b>You pick the flavours and the formats</b> from Magnum's current line, subject to availability. If something you choose runs out, we substitute a comparable product of equal or greater value.</span>
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
-            <span>Approximate retail value <b>$1,000 CAD</b>. No cash value, not transferable.</span>
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
-            <span>One winner. Notified by email within <b>three business days</b> of selection, with <b>five days</b> to respond.</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ======================= FORMULA ======================= -->
 <section class="section section--paper" id="formula">
   <div class="wrap">
@@ -1449,6 +1427,36 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         </div>
       </aside>
 
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PRIZE ======================= -->
+<section class="section section--dark on-dark" id="prize">
+  <div class="wrap">
+    <p class="eyebrow eyebrow--light prize__eyebrow rv">The prize</p>
+
+    <div class="prize">
+      <div class="rv">
+        <h2 class="sec-title">A year of protein.</h2>
+      </div>
+
+      <div class="rv rv-d1">
+        <ul class="prize__list">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            <span><b>You pick the flavours and the formats</b> from Magnum's current line, subject to availability. If something you choose runs out, we substitute a comparable product of equal or greater value.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            <span>Approximate retail value <b>$1,000 CAD</b>. No cash value, not transferable.</span>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
+            <span>One winner. Notified by email within <b>three business days</b> of selection, with <b>five days</b> to respond.</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
