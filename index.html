@@ -1352,7 +1352,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
           <div class="verified">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
-            <p>Email verified — you're entering as <b class="tbd">entrant@email.com</b>. One entry per person.</p>
+            <p>Email verified — you're entering as <b class="tbd" data-entrant>entrant@email.com</b>. One entry per person.</p>
           </div>
 
           <!-- Q1 -->
@@ -1463,7 +1463,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
             </svg>
             <h3>Entry received.</h3>
             <p>
-              A confirmation email is on its way to <b class="tbd">entrant@email.com</b>.
+              A confirmation email is on its way to <b class="tbd" data-entrant>entrant@email.com</b>.
               If it doesn't arrive in a few minutes, check your spam folder before entering again —
               a second entry from the same person is disqualified, not counted twice.
             </p>
@@ -1936,6 +1936,24 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   } else {
     init();
   }
+})();
+</script>
+
+<script>
+/* Entrant address, injected from the verified link built by enter.html.
+   Real implementation looks the address up server-side from the single-use
+   token; ?e= is the review-build stand-in. Without it the gold placeholder
+   stays put, which is the existing behaviour. */
+(function(){
+  'use strict';
+  var raw = new URLSearchParams(window.location.search).get('e');
+  if (!raw) return;
+  var value = raw.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) return;
+  document.querySelectorAll('[data-entrant]').forEach(function(el){
+    el.textContent = value;
+    el.classList.remove('tbd');   /* resolved — no longer an unfilled placeholder */
+  });
 })();
 </script>
 
