@@ -608,72 +608,52 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 /* --------------------------------------------------------------------------
    FORMULA
    -------------------------------------------------------------------------- */
-/* Dark card on the cream page: the spec strip is the one place in the formula
-   section that should stop the eye, and it echoes the prize band further down.
-   Six facts on an even 3x2 — the raised first cell carries the headline number
-   rather than a wider column doing it. */
-.spec{
+/* Light card grid on the white formula section. Six facts, 3x2, hairline
+   dividers: the black strip that used to live here fought the prize band for
+   attention, and this section is meant to be read, not shouted. */
+.facts{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:1px;background:rgba(255,255,255,0.12);
-  border:1px solid var(--ink);background-color:var(--ink);
+  gap:1px;background:rgba(10,10,10,0.14);
+  border:1px solid rgba(10,10,10,0.14);
   margin-top:clamp(2.5rem,5vw,3.5rem);
-  border-radius:2px;overflow:hidden;
 }
-@media(max-width:820px){.spec{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:520px){.spec{grid-template-columns:1fr}}
-/* Flex column + margin-top:auto on the label bottom-aligns every label
-   across the row, so differing key sizes don't stagger them. */
-.spec__i{
-  position:relative;background:var(--ink);color:var(--cream);
-  padding:1.7rem 1.6rem 1.6rem;
-  /* Two rows now, so the breathing room is an explicit min-height instead of
-     the inherited paragraph margins that used to run the cell to ~390px. */
-  min-height:clamp(10.5rem,16vw,14rem);
-  display:flex;flex-direction:column;justify-content:space-between;gap:0.6rem;
+@media(max-width:860px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.facts{grid-template-columns:1fr}}
+
+/* space-between parks the ordinal row at the top and the copy at the bottom,
+   so the six cards align on both edges however long the sentence runs. */
+.fact{
+  position:relative;background:var(--cream);
+  padding:clamp(1.5rem,2.4vw,2rem);
+  min-height:clamp(12rem,19vw,17rem);
+  display:flex;flex-direction:column;justify-content:space-between;
+  gap:clamp(2rem,4vw,3.25rem);
   transition:background-color .25s ease;
 }
-.spec__i--lead{background:var(--ink-raise)}
-/* Index marker, matching the 01/02 language the entry form already uses. */
-.spec__ix{
-  font-family:var(--label);font-weight:700;font-size:0.75rem;
-  letter-spacing:0.22em;color:var(--gold);margin-bottom:1.1rem;
+.fact:hover{background:var(--paper)}
+/* "/ 01" rather than a bare numeral — the slash is what makes it read as an
+   index instead of a quantity, next to cards that open with real numbers. */
+.fact__ix{
+  font-family:var(--label);font-weight:700;font-size:0.8125rem;
+  letter-spacing:0.22em;color:var(--blue);
 }
-/* Cells stretch to the tallest (the lead numeral drives it), so distribute rather
-   than bottom-align: auto margins gave different results per cell because the lead
-   has a note the others don't, which read as accidental voids. */
-.spec__k{
-  margin:0;
-  font-family:var(--label);font-weight:900;
-  font-size:clamp(2.4rem,5vw,3.4rem);line-height:1;letter-spacing:-0.015em;
-  color:var(--paper);
+.fact__t{
+  margin:0 0 0.85rem;
+  font-size:clamp(1.0625rem,1.5vw,1.25rem);line-height:1.1;
+  letter-spacing:0.005em;text-transform:uppercase;color:var(--ink);
 }
-.spec__i--lead .spec__k{font-size:clamp(3rem,6vw,4.2rem);color:var(--gold)}
-.spec__k small{font-size:0.42em;font-weight:700;color:var(--gold);margin-left:0.12em}
-.spec__i--lead .spec__k small{color:var(--paper);opacity:0.65}
-/* Labels carry the message here, so they're sized to hold their own against
-   the numeral rather than sitting under it as fine print. */
-.spec__v{
-  margin:0;padding-top:0.85rem;
-  font-family:var(--label);font-weight:900;
-  font-size:clamp(1.05rem,1.9vw,1.35rem);line-height:1.1;
-  letter-spacing:0.02em;text-transform:uppercase;color:var(--cream);
+.fact__d{
+  margin:0;max-width:30ch;min-height:calc(3 * 1.6em);
+  font-size:0.9375rem;line-height:1.6;color:var(--n-700);
 }
-/* A gold rule wipes across the top of a hovered cell. transform-origin left so it
-   reads as a sweep, not a grow-from-centre. */
-.spec__i::after{
-  content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--gold);
+/* Blue rule wipes across the top of a hovered card, left to right. */
+.fact::after{
+  content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--blue);
   transform:scaleX(0);transform-origin:left;transition:transform .3s ease;
 }
-.spec__i:hover{background:var(--carbon)}
-.spec__i--lead:hover{background:var(--carbon)}
-.spec__i:hover::after{transform:scaleX(1)}
+.fact:hover::after{transform:scaleX(1)}
 @media(prefers-reduced-motion:reduce){
-  .spec__i,.spec__i::after{transition:none}
-}
-/* Word-based key ("Lactose free") needs less size than a two-glyph numeral
-   to occupy the same optical width. */
-.spec__k--text{
-  font-size:clamp(1.6rem,3.1vw,2.1rem);letter-spacing:-0.005em;
+  .fact,.fact::after{transition:none}
 }
 
 /* Protein sources — the doc says "in order of inclusion", so the bar
@@ -1169,41 +1149,56 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
       </p>
     </div>
 
-    <div class="spec" data-motion-group>
-      <div class="spec__i spec__i--lead" data-motion-item>
-        <span class="spec__ix" aria-hidden="true">01</span>
-        <p class="spec__k">
-          <span class="spec__count" data-count-to="30">30</span><small>g</small>
-        </p>
-        <p class="spec__v">Per scoop</p>
-      </div>
-      <div class="spec__i" data-motion-item>
-        <span class="spec__ix" aria-hidden="true">02</span>
-        <p class="spec__k spec__k--text">Lactose free</p>
-        <p class="spec__v">Sans lactose</p>
-      </div>
-      <div class="spec__i" data-motion-item>
-        <span class="spec__ix" aria-hidden="true">03</span>
-        <p class="spec__k spec__k--text">Non-vegan</p>
-        <p class="spec__v">Hydrolyzed collagen</p>
-      </div>
-      <div class="spec__i" data-motion-item>
-        <span class="spec__ix" aria-hidden="true">04</span>
-        <p class="spec__k">
-          <span class="spec__count" data-count-to="4">4</span>
-        </p>
-        <p class="spec__v">Protein sources</p>
-      </div>
-      <div class="spec__i" data-motion-item>
-        <span class="spec__ix" aria-hidden="true">05</span>
-        <p class="spec__k spec__k--text">Full profile</p>
-        <p class="spec__v">Amino acids</p>
-      </div>
-      <div class="spec__i" data-motion-item>
-        <span class="spec__ix" aria-hidden="true">06</span>
-        <p class="spec__k spec__k--text">BCAAs</p>
-        <p class="spec__v">In the blend</p>
-      </div>
+    <div class="facts" data-motion-group>
+
+      <article class="fact" data-motion-item>
+        <span class="fact__ix" aria-hidden="true">/ 01</span>
+        <div>
+          <h3 class="fact__t"><span data-count-to="30">30</span>g per scoop</h3>
+          <p class="fact__d">A single scoop delivers all thirty grams, drawn from four sources rather than one.</p>
+        </div>
+      </article>
+
+      <article class="fact" data-motion-item>
+        <span class="fact__ix" aria-hidden="true">/ 02</span>
+        <div>
+          <h3 class="fact__t">Lactose free</h3>
+          <p class="fact__d">Sans lactose — printed on the label in both official languages.</p>
+        </div>
+      </article>
+
+      <article class="fact" data-motion-item>
+        <span class="fact__ix" aria-hidden="true">/ 03</span>
+        <div>
+          <h3 class="fact__t">Non-vegan</h3>
+          <p class="fact__d">The blend leads with hydrolyzed beef collagen, so it isn't a plant-only formula.</p>
+        </div>
+      </article>
+
+      <article class="fact" data-motion-item>
+        <span class="fact__ix" aria-hidden="true">/ 04</span>
+        <div>
+          <h3 class="fact__t"><span data-count-to="4">4</span> protein sources</h3>
+          <p class="fact__d">Hydrolyzed collagen, pea, fava and rice, listed below in order of inclusion.</p>
+        </div>
+      </article>
+
+      <article class="fact" data-motion-item>
+        <span class="fact__ix" aria-hidden="true">/ 05</span>
+        <div>
+          <h3 class="fact__t">Full amino profile</h3>
+          <p class="fact__d">The four sources cover the amino acid profile between them, BCAAs included.</p>
+        </div>
+      </article>
+
+      <article class="fact" data-motion-item>
+        <span class="fact__ix" aria-hidden="true">/ 06</span>
+        <div>
+          <h3 class="fact__t">BCAAs</h3>
+          <p class="fact__d">Branched-chain amino acids are built into the blend, listed right on the label.</p>
+        </div>
+      </article>
+
     </div>
 
     <div class="sources rv rv-d2" id="sources">
@@ -1837,19 +1832,19 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
           ease: 'easeOut'
         });
 
-        // Count the headline figure up to its final value. The HTML already
-        // contains "30", so no-JS and reduced-motion both read correctly and this
-        // only ever replaces it with the same number.
-        var counter = group.querySelector('[data-count-to]');
-        if (counter && !reduce){
-          var to = Number(counter.getAttribute('data-count-to'));
-          if (to){
+        // Count each figure up to its final value. The HTML already contains the
+        // number, so no-JS and reduced-motion both read correctly and this only
+        // ever replaces it with the same number.
+        if (!reduce){
+          group.querySelectorAll('[data-count-to]').forEach(function(counter){
+            var to = Number(counter.getAttribute('data-count-to'));
+            if (!to) return;
             M.animate(0, to, {
               duration: 1.1,
               ease: 'easeOut',
               onUpdate: function(v){ counter.textContent = Math.round(v); }
             });
-          }
+          });
         }
       }, { amount: 0.35 });
     });
