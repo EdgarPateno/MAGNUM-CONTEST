@@ -318,7 +318,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   gap:clamp(2rem,5vw,4.5rem);
   align-items:center;
 }
-@media(max-width:940px){
+@media(max-width:1080px){
   .hero__grid{grid-template-columns:1fr;gap:3rem}
 }
 
@@ -335,7 +335,17 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   font-style:normal;
   color:var(--blue-lift);
 }
-.hero__cta{display:flex;flex-wrap:wrap;gap:0.85rem;margin-top:2.4rem}
+.hero__cta{display:flex;flex-wrap:wrap;gap:0.7rem;margin-top:2.4rem}
+/* Three CTAs have to sit on one line inside the hero's grid column, which is
+   only ~1.15fr of the wrap. The set runs tighter than the site default and
+   keeps shrinking with the viewport so the row survives down to the point the
+   hero stacks (1080px), where the CTAs get the full width back. */
+.hero__cta .btn{
+  gap:clamp(0.4rem,0.55vw,0.6rem);
+  padding:1rem clamp(0.5rem,0.9vw,0.85rem) 1rem clamp(0.65rem,1.1vw,1.15rem);
+  font-size:clamp(0.6875rem,0.78vw,0.8125rem);
+  letter-spacing:0.07em;
+}
 
 /* No-purchase-necessary — required on the page itself, not buried in rules */
 .npn{
@@ -600,23 +610,25 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
    -------------------------------------------------------------------------- */
 /* Dark card on the cream page: the spec strip is the one place in the formula
    section that should stop the eye, and it echoes the prize band further down.
-   Asymmetric on purpose — 30g is the headline number, the other two support it. */
+   Six facts on an even 3x2 — the raised first cell carries the headline number
+   rather than a wider column doing it. */
 .spec{
-  display:grid;grid-template-columns:1.35fr 1fr 1fr;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
   gap:1px;background:rgba(255,255,255,0.12);
   border:1px solid var(--ink);background-color:var(--ink);
   margin-top:clamp(2.5rem,5vw,3.5rem);
   border-radius:2px;overflow:hidden;
 }
-@media(max-width:820px){.spec{grid-template-columns:1fr 1fr}
-  .spec__i--lead{grid-column:1 / -1}}
-@media(max-width:520px){.spec{grid-template-columns:1fr}
-  .spec__i--lead{grid-column:auto}}
+@media(max-width:820px){.spec{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.spec{grid-template-columns:1fr}}
 /* Flex column + margin-top:auto on the label bottom-aligns every label
    across the row, so differing key sizes don't stagger them. */
 .spec__i{
   position:relative;background:var(--ink);color:var(--cream);
   padding:1.7rem 1.6rem 1.6rem;
+  /* Two rows now, so the breathing room is an explicit min-height instead of
+     the inherited paragraph margins that used to run the cell to ~390px. */
+  min-height:clamp(10.5rem,16vw,14rem);
   display:flex;flex-direction:column;justify-content:space-between;gap:0.6rem;
   transition:background-color .25s ease;
 }
@@ -630,6 +642,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
    than bottom-align: auto margins gave different results per cell because the lead
    has a note the others don't, which read as accidental voids. */
 .spec__k{
+  margin:0;
   font-family:var(--label);font-weight:900;
   font-size:clamp(2.4rem,5vw,3.4rem);line-height:1;letter-spacing:-0.015em;
   color:var(--paper);
@@ -640,14 +653,10 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 /* Labels carry the message here, so they're sized to hold their own against
    the numeral rather than sitting under it as fine print. */
 .spec__v{
-  padding-top:0.85rem;
+  margin:0;padding-top:0.85rem;
   font-family:var(--label);font-weight:900;
   font-size:clamp(1.05rem,1.9vw,1.35rem);line-height:1.1;
   letter-spacing:0.02em;text-transform:uppercase;color:var(--cream);
-}
-.spec__note{
-  margin-top:0.55rem;font-size:0.8125rem;line-height:1.45;
-  color:var(--n-500);
 }
 /* A gold rule wipes across the top of a hovered cell. transform-origin left so it
    reads as a sweep, not a grow-from-centre. */
@@ -1166,18 +1175,34 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         <p class="spec__k">
           <span class="spec__count" data-count-to="30">30</span><small>g</small>
         </p>
-        <p class="spec__v">Protein per scoop</p>
-        <p class="spec__note">Four sources, one blend.</p>
+        <p class="spec__v">Per scoop</p>
       </div>
       <div class="spec__i" data-motion-item>
         <span class="spec__ix" aria-hidden="true">02</span>
         <p class="spec__k spec__k--text">Lactose free</p>
-        <p class="spec__v">Non-vegan</p>
+        <p class="spec__v">Sans lactose</p>
       </div>
       <div class="spec__i" data-motion-item>
         <span class="spec__ix" aria-hidden="true">03</span>
+        <p class="spec__k spec__k--text">Non-vegan</p>
+        <p class="spec__v">Hydrolyzed collagen</p>
+      </div>
+      <div class="spec__i" data-motion-item>
+        <span class="spec__ix" aria-hidden="true">04</span>
+        <p class="spec__k">
+          <span class="spec__count" data-count-to="4">4</span>
+        </p>
+        <p class="spec__v">Protein sources</p>
+      </div>
+      <div class="spec__i" data-motion-item>
+        <span class="spec__ix" aria-hidden="true">05</span>
         <p class="spec__k spec__k--text">Full profile</p>
-        <p class="spec__v">Amino acids &#183; BCAAs</p>
+        <p class="spec__v">Amino acids</p>
+      </div>
+      <div class="spec__i" data-motion-item>
+        <span class="spec__ix" aria-hidden="true">06</span>
+        <p class="spec__k spec__k--text">BCAAs</p>
+        <p class="spec__v">In the blend</p>
       </div>
     </div>
 
