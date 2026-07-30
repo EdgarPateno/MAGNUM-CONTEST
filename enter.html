@@ -413,6 +413,9 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .sent{display:none}
 .sent.is-on{display:block;animation:slip .6s var(--ease) both}
 .sent__ic{width:2.75rem;height:2.75rem;stroke:var(--green);fill:none;stroke-width:1.8;margin-bottom:1.25rem}
+/* Matches the submit button it replaces, so the card keeps the same footprint
+   whichever state it is in. */
+.sent__go{width:100%;justify-content:space-between}
 .sent p{margin:0 0 0.9rem;font-size:0.9375rem;line-height:1.6;color:var(--n-700)}
 .sent p b{color:var(--ink);font-weight:600;word-break:break-word}
 /* --------------------------------------------------------------------------
@@ -592,6 +595,13 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
               <h2 class="gate__ask">
                 Check your inbox, verify your email address, and click the unique link to join!
               </h2>
+
+              <a class="btn btn--gold sent__go" href="index.html" id="entryLink">
+                Continue to the entry form
+                <span class="btn__well" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="square"/></svg>
+                </span>
+              </a>
             </div>
 
           </div>
@@ -754,6 +764,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   });
 
   function swapToSent(){
+    /* Carries the address to the entry form the way the single-use link will.
+       Replace with the tokenised URL once the API issues one. */
+    document.getElementById('entryLink').href =
+      'index.html?e=' + encodeURIComponent(email.value.trim()) + '#entry-form';
+
     form.style.display = 'none';
     sent.classList.add('is-on');
     sent.focus();
