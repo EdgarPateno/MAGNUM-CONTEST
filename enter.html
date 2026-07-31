@@ -234,7 +234,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   background:var(--ink);
   color:var(--paper);
   margin-top:-4.05rem;
-  padding-top:8rem;
+  /* 7.25rem, not 8rem: the negative margin above pulls the hero under the
+     fixed bar, so this padding is what clears it. 7.25rem still leaves ~50px
+     of air below the bar and buys back the 8px that pushed the "no purchase
+     necessary" badge under the fold on a 1280x800 laptop. */
+  padding-top:7.25rem;
   padding-bottom:clamp(3.5rem,7vw,6rem);
   overflow:hidden;
   isolation:isolate;
@@ -249,14 +253,16 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .hero__eyebrow{margin-bottom:clamp(1.75rem,4vw,2.75rem)}
 
 /* Text column can breathe; the card is capped so the form never gets wide
-   enough for the checkbox copy to run past a comfortable measure. Centred
-   rather than top-aligned: the title is now short enough that top-aligning it
-   against a form-height card leaves it stranded at the top of the row. */
+   enough for the checkbox copy to run past a comfortable measure. Top-aligned:
+   an earlier revision centred this because the title was two short lines and
+   centring kept it from stranding at the top of a form-height card. The title
+   now runs four lines, so centring pushed the lede under the fold on a 900px
+   viewport — start-alignment puts the whole text column back above it. */
 .hero__grid{
   display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,28rem);
   gap:clamp(2.25rem,5vw,4.5rem);
-  align-items:center;
+  align-items:start;
 }
 @media(max-width:980px){
   .hero__grid{grid-template-columns:1fr;gap:2.75rem}
@@ -274,9 +280,8 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   color:var(--blue-lift);
 }
 
-/* Hero lede, restored under the h1. The lowercase opening is deliberate: the
-   line reads as a continuation of the headline above it, not a new sentence.
-   max-width is in ch so the measure holds at every clamp step. */
+/* Hero lede, restored under the h1. max-width is in ch so the measure holds
+   at every clamp step. */
 .lede{
   margin-top:clamp(1.25rem,2.6vw,1.9rem);
   max-width:34ch;
@@ -556,7 +561,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         <h1>Name Magnum&rsquo;s<br>next<em>protein powder</em></h1>
 
         <p class="lede">
-          for a chance to win a year of Magnum protein powder, your choice of type and flavour.
+          For a chance to win a year of Magnum protein powder, your choice of type and flavour.
         </p>
 
         <p class="npn">
