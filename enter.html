@@ -274,11 +274,25 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   color:var(--blue-lift);
 }
 
-/* Sits directly under the h1 now that the lede and prize figure are gone, so
-   it carries the whole gap on its own. */
+/* Hero lede, restored under the h1. The lowercase opening is deliberate: the
+   line reads as a continuation of the headline above it, not a new sentence.
+   max-width is in ch so the measure holds at every clamp step. */
+.lede{
+  margin-top:clamp(1.25rem,2.6vw,1.9rem);
+  max-width:34ch;
+  font-family:var(--body);
+  font-size:clamp(1.0625rem,1.5vw,1.3125rem);
+  font-weight:300;
+  line-height:1.5;
+  color:var(--n-300);
+  text-wrap:pretty;
+}
+
+/* Follows the lede now, so it no longer carries the whole gap under the h1
+   on its own — the margin below is smaller than it was pre-lede. */
 .npn{
   display:inline-flex;align-items:center;gap:0.6rem;
-  margin-top:clamp(1.75rem,3.5vw,2.5rem);padding:0.5rem 0.85rem;
+  margin-top:clamp(1.25rem,2.4vw,1.75rem);padding:0.5rem 0.85rem;
   border:1px solid rgba(255,255,255,0.2);
   font-family:var(--body);
   font-size:0.6875rem;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;
@@ -316,6 +330,45 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 /* In the sent state it is the last thing in the card, so the gap below it
    would just stack on the card's own padding. */
 .gate__ask:last-child{margin-bottom:0}
+/* Tighter when it labels the steps list directly beneath it. */
+.gate__ask--steps{margin-bottom:1.1rem}
+
+/* How-to-enter steps. The numerals come from a CSS counter so the markup stays
+   a plain <ol> — screen readers still announce "list, 3 items" and the numbers
+   survive with CSS off, which a <div> stack of hand-typed digits would not.
+   Square numerals, no radius: brand tokens are zero-radius throughout. */
+.steps{
+  list-style:none;
+  margin:0 0 1.9rem;
+  padding:0;
+  counter-reset:step;
+}
+.steps li{
+  counter-increment:step;
+  position:relative;
+  padding-left:2.6rem;
+  font-family:var(--body);
+  font-size:1rem;
+  line-height:1.5;
+  color:var(--n-700);
+  text-wrap:pretty;
+}
+.steps li + li{margin-top:1rem}
+.steps li::before{
+  content:counter(step);
+  position:absolute;
+  left:0;
+  /* Optical, not geometric: centres the numeral box on the first line of text
+     (1rem * 1.5 line-height = 1.5rem) rather than on the whole list item, so
+     wrapped steps keep the numeral beside line one. */
+  top:calc((1.5rem - 1.75rem) / 2);
+  display:flex;align-items:center;justify-content:center;
+  width:1.75rem;height:1.75rem;
+  background:var(--blue);
+  color:var(--paper);
+  font-family:var(--label);
+  font-size:0.9375rem;font-weight:700;line-height:1;
+}
 
 /* --------------------------------------------------------------------------
    Form controls
@@ -500,7 +553,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
     <div class="hero__grid">
 
       <div>
-        <h1>Name<br>our next<em>protein.</em></h1>
+        <h1>Name Magnum&rsquo;s<br>next<em>protein powder</em></h1>
+
+        <p class="lede">
+          for a chance to win a year of Magnum protein powder, your choice of type and flavour.
+        </p>
 
         <p class="npn">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
@@ -515,9 +572,16 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
             <!-- Form state -->
             <form id="gateForm" novalidate>
-              <h2 class="gate__ask">
-                Enter your email to join the contest for a chance to win a year of protein powder.
-              </h2>
+              <h2 class="gate__ask gate__ask--steps">How to Enter:</h2>
+
+              <ol class="steps">
+                <li>Enter your email below</li>
+                <li>Check your inbox for your unique link to the contest</li>
+                <li>
+                  Submit a name suggestion (we&rsquo;ll provide product details), and if your
+                  suggestion is chosen, you win a year&rsquo;s worth of Magnum protein powder
+                </li>
+              </ol>
 
               <div class="field" id="emailField">
                 <label class="field__l" for="email">
