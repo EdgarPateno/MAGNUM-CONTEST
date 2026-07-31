@@ -196,9 +196,12 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   -webkit-backdrop-filter:blur(18px);
   border-bottom-color:rgba(255,255,255,0.12);
 }
+/* Matches the hero: no 80rem cap and a flat 2rem inline inset, so the MAGNUM
+   mark lines up with the headline below it instead of sitting on .wrap's much
+   larger responsive gutter. Vertical padding is unchanged. */
 .bar__in{
-  max-width:var(--max);margin:0 auto;
-  padding:0.9rem var(--gut);
+  max-width:none;margin:0 auto;
+  padding:0.9rem 2rem;
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
 }
 .bar__mark{
@@ -614,7 +617,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
             <!-- Form state -->
             <form id="gateForm" novalidate>
-              <h2 class="gate__ask gate__ask--steps">How to Enter:</h2>
+              <h2 class="gate__ask gate__ask--steps">How to Join</h2>
 
               <ol class="steps">
                 <li>Enter your email below</li>
