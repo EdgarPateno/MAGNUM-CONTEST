@@ -647,6 +647,15 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   margin:0;max-width:30ch;min-height:calc(3 * 1.6em);
   font-size:0.9375rem;line-height:1.6;color:var(--n-700);
 }
+/* Cards whose description was removed keep their heading on the same line as
+   the rest of the row. The card is justify-content:space-between, so its text
+   block is bottom-anchored, and .fact__d above reserves three lines — without
+   a paragraph the heading simply drops into that reserved space. Reserve it
+   explicitly instead. The value is stated in rem, not em, on purpose: em here
+   would resolve against the heading's own clamped font-size rather than the
+   0.9375rem/1.6 description it is standing in for (0.9375 * 1.6 * 3 = 4.5rem,
+   plus the heading's own 0.85rem bottom margin). */
+.fact__t:last-child{margin-bottom:calc(0.85rem + 4.5rem)}
 /* Blue rule wipes across the top of a hovered card, left to right. */
 .fact::after{
   content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--blue);
@@ -1033,7 +1042,10 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
           <a class="btn btn--gold" href="#entry-form">
             Submit your name
             <span class="btn__well" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="square"/></svg>
+              <!-- Down arrow, matching the two ghost buttons beside it: all
+                   three jump further down this page, so a rightward arrow was
+                   the odd one out. -->
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6" stroke-linecap="square"/></svg>
             </span>
           </a>
           <a class="btn btn--ghost" href="#formula">
@@ -1132,7 +1144,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         <span class="fact__ix" aria-hidden="true">/ 02</span>
         <div>
           <h3 class="fact__t">Lactose free</h3>
-          <p class="fact__d">Sans lactose — printed on the label in both official languages.</p>
         </div>
       </article>
 
@@ -1140,7 +1151,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         <span class="fact__ix" aria-hidden="true">/ 03</span>
         <div>
           <h3 class="fact__t">Non-vegan</h3>
-          <p class="fact__d">The blend leads with hydrolyzed beef collagen, so it isn't a plant-only formula.</p>
+          <p class="fact__d">The blend leads with hydrolyzed beef collagen.</p>
         </div>
       </article>
 
@@ -1156,7 +1167,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         <span class="fact__ix" aria-hidden="true">/ 05</span>
         <div>
           <h3 class="fact__t">Full amino profile</h3>
-          <p class="fact__d">The four sources cover the amino acid profile between them, BCAAs included.</p>
         </div>
       </article>
 
@@ -1202,13 +1212,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
         <div>
           <p class="src__nm">Rice</p>
           <div class="src__bar"><div class="src__fill" style="--w:40%"></div></div>
-        </div>
-      </div>
-      <div class="src">
-        <span class="src__ord">05</span>
-        <div>
-          <p class="src__nm">BCAAs <em>Full amino acid profile</em></p>
-          <div class="src__bar"><div class="src__fill" style="--w:24%"></div></div>
         </div>
       </div>
 
@@ -1273,13 +1276,18 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
             <!-- Q2: only if yes -->
             <div class="field cond" id="condYes">
               <label class="field__l" for="whyYes">Why should we keep “Quattro”?<span class="field__req" aria-hidden="true">*</span></label>
-              <textarea class="ta" id="whyYes" name="why_yes" placeholder="What does Quattro carry that a new word wouldn't?"></textarea>
+              <!-- Placeholders rewritten to address the entrant. The old pair
+                   ("What does Quattro carry that a new word wouldn't?" /
+                   "What's it costing us to keep it?") were phrased from
+                   Magnum's side, so they read as questions the entrant was
+                   being asked to answer on the company's behalf. -->
+              <textarea class="ta" id="whyYes" name="why_yes" placeholder="In a sentence or two, why it should stay."></textarea>
             </div>
 
             <!-- Q3: only if no -->
             <div class="field cond" id="condNo">
               <label class="field__l" for="whyNo">Why should we drop “Quattro”?<span class="field__req" aria-hidden="true">*</span></label>
-              <textarea class="ta" id="whyNo" name="why_no" placeholder="What's it costing us to keep it?"></textarea>
+              <textarea class="ta" id="whyNo" name="why_no" placeholder="In a sentence or two, why it should go."></textarea>
             </div>
           </fieldset>
 
@@ -1440,10 +1448,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
           </li>
           <li>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
-            <span>Approximate retail value <b>$1,000 CAD</b>. No cash value, not transferable.</span>
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="square"/></svg>
             <span>One winner. Notified by email within <b>three business days</b> of selection, with <b>five days</b> to respond.</span>
           </li>
         </ul>
@@ -1482,110 +1486,9 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
       </div>
     </div>
 
-    <p class="sec-sub rv rv-d2" style="max-width:60ch;margin-top:2rem">
-      Highest combined score wins. Judges' decisions are final. In a tie, tied entrants
-      answer a mathematical skill-testing question unaided, as required by Canadian law.
-    </p>
   </div>
 </section>
 
-<!-- ======================= RULES ======================= -->
-<section class="section section--paper" id="rules">
-  <div class="wrap">
-    <div class="rv">
-      <p class="eyebrow">The fine print</p>
-      <h2 class="sec-title">Official contest<br>rules.</h2>
-      <p class="sec-sub">
-        The Official Rules governing this contest are set out in full below. Read them
-        before you enter.
-      </p>
-    </div>
-
-    <div class="rules rv rv-d1">
-
-      <details class="rule">
-        <summary>1 · Contest period <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p>The Contest begins <span class="tbd">[START DATE]</span> at <span class="tbd">[TIME]</span> ET and ends <span class="tbd">[END DATE]</span> at <span class="tbd">[TIME]</span> ET. Entries received outside the Contest Period will not be accepted.</p>
-        </div>
-      </details>
-
-      <details class="rule">
-        <summary>2 · Who can enter <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p>Open only to legal residents of <b>Canada, excluding Quebec</b>, who have reached the age of majority in their province or territory of residence at the time of entry. Void in Quebec and where otherwise prohibited by law.</p>
-          <p>Employees, officers and directors of Magnum Nutraceuticals Inc. and its affiliates and agencies, and their immediate family or household members, are not eligible.</p>
-          <p><b>Limit one entry per person.</b> Multiple entries using multiple email addresses or identities will be disqualified.</p>
-        </div>
-      </details>
-
-      <details class="rule">
-        <summary>3 · How to enter <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p><b>No purchase necessary.</b> Submit a valid email address, verify it, open the unique link you're sent, and complete this entry form — a proposed name, your rationale, and the other required answers.</p>
-          <p>By submitting an entry you confirm that you have reached the age of majority in your province or territory of residence, that you are a resident of Canada excluding Quebec, and that you have read and agree to the Official Contest Rules. You'll get a confirmation email on successful submission.</p>
-        </div>
-      </details>
-
-      <details class="rule">
-        <summary>4 · Selection of winner <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p>A panel of Magnum Nutraceuticals Inc. representatives judges entries on originality (33.3%), relevance to the product (33.3%) and brand fit (33.3%). Highest combined score wins, at the judges' sole discretion. Decisions are final.</p>
-          <p>This contest is a test of skill and judgment. <b>No random draw or element of chance is used.</b> Ties are broken by a mathematical skill-testing question answered without assistance.</p>
-        </div>
-      </details>
-
-      <details class="rule">
-        <summary>5 · Prize <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p>One (1) winner receives a one-year supply of Magnum Nutraceuticals Inc. protein powder — fourteen (14) two-pound tubs. The winner selects preferred flavour(s) and protein type(s) from the current line, subject to availability; unavailable selections are substituted with comparable products of equal or greater value.</p>
-          <p>Approximate total retail value <b>$1,000 CAD</b>. No cash value, not transferable or redeemable for cash. Magnum reserves the right to substitute a prize of equal or greater value.</p>
-        </div>
-      </details>
-
-      <details class="rule">
-        <summary>6 · Winner notification <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p>The potential winner is notified by email within three (3) business days of selection, at the address given at entry, and must respond within five (5) days, correctly answer the skill-testing question if applicable, and sign and return a Declaration and Intellectual Property Release Form to claim the prize.</p>
-          <p>If the potential winner can't be reached, doesn't respond in time, doesn't return the release, or doesn't meet an eligibility requirement, Magnum may select an alternate winner or not award the prize.</p>
-        </div>
-      </details>
-
-      <details class="rule">
-        <summary>7 · Use of your submitted name <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p>By submitting a name you grant Magnum Nutraceuticals Inc. a perpetual, irrevocable, worldwide, royalty-free licence to use, adapt, modify, register as a trademark and commercially exploit that name and any associated ideas, without further compensation, credit or approval.</p>
-          <p>You confirm your name is original, infringes no third party's rights, and is not obscene or otherwise inappropriate. Magnum may disqualify any entry that breaches this at its sole discretion, and is under no obligation to use any submitted name — including the winning one.</p>
-        </div>
-      </details>
-
-      <details class="rule">
-        <summary>8 · Publicity and privacy <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p>By accepting the prize the winner consents to Magnum using their name, city/province of residence and entry for advertising and promotional purposes related to this contest, in any media, without additional compensation, except where prohibited by law.</p>
-          <p>Personal information is used solely to administer the contest and, where separately consented to, for marketing — in line with Magnum's <a href="https://magnumsupps.com/policies/privacy-policy">Privacy Policy</a>, PIPEDA and provincial privacy law. You can withdraw marketing consent at any time.</p>
-        </div>
-      </details>
-
-      <details class="rule">
-        <summary>9 · General conditions <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p>Magnum may cancel, terminate, modify or suspend the contest if a virus, bug, unauthorized intervention, fraud or other cause beyond its control corrupts the administration, security or proper play of the contest, and may disqualify anyone tampering with the entry process.</p>
-          <p>Magnum is not responsible for lost, late, incomplete, illegible, misdirected or garbled entries, or for technical failures of any kind. By entering you agree to release and hold harmless Magnum Nutraceuticals Inc. and its officers, directors, employees and agents from any liability arising from participation or from acceptance or use of the prize.</p>
-          <p>This contest is governed by the laws of the Province of Ontario and the federal laws of Canada applicable therein.</p>
-        </div>
-      </details>
-
-      <details class="rule">
-        <summary>10 · Questions <span class="rule__pm" aria-hidden="true"></span></summary>
-        <div class="rule__body">
-          <p>Questions about this contest may be directed to <span class="tbd">[CONTACT EMAIL]</span>.</p>
-        </div>
-      </details>
-
-    </div>
-  </div>
-</section>
 
 <!-- ======================= FOOTER ======================= -->
 <footer class="foot">
