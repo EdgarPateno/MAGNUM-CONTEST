@@ -184,50 +184,49 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 /* --------------------------------------------------------------------------
    Sticky bar
    -------------------------------------------------------------------------- */
+/* Header copied from magnumsupps.com: same cream at 92% over a 20px blur, the
+   same hairline bottom border, and the same ~77px band. Values read off the
+   live site rather than guessed. It carries the real black wordmark, so the
+   surface has to stay light — this is why the bar no longer goes transparent
+   over the hero the way the old contest-only bar did. No nav and no icons by
+   request: the logo and OFFICIAL RULES are the whole header. */
 .bar{
   position:sticky;top:0;z-index:30;
-  background:transparent;
-  transition:background .5s var(--ease),border-color .5s var(--ease);
-  border-bottom:1px solid transparent;
+  background:rgba(249,248,244,0.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(18,18,18,0.08);
 }
-.bar.is-stuck{
-  background:rgba(10,10,10,0.86);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  border-bottom-color:rgba(255,255,255,0.12);
-}
-/* Matches the hero: no 80rem cap and a flat 2rem inline inset, so the MAGNUM
-   mark lines up with the headline below it instead of sitting on .wrap's much
-   larger responsive gutter. Vertical padding is unchanged. */
 .bar__in{
   max-width:none;margin:0 auto;
-  padding:0.9rem 2rem;
+  /* 2rem, not magnumsupps' 30px, so the wordmark sits on the same vertical
+     line as the headline below it. */
+  padding:1rem 2rem;
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  min-height:77px;
 }
-.bar__mark{
-  font-family:var(--display);font-weight:900;font-size:1.0625rem;
-  letter-spacing:0.02em;color:var(--paper);text-decoration:none;
-  display:flex;align-items:baseline;gap:0.55rem;
-}
-.bar__mark span{
-  font-family:var(--body);font-size:0.625rem;font-weight:600;
-  letter-spacing:0.2em;color:var(--blue-lift);
+.bar__mark{display:inline-flex;align-items:center;text-decoration:none}
+/* Intrinsic size of the source PNG is 150x21 on magnumsupps.com; height is the
+   controlling dimension and width:auto keeps the aspect ratio if the asset is
+   ever swapped. */
+.bar__logo{display:block;width:auto;height:21px}
+@media(max-width:640px){
+  .bar__logo{height:18px}
 }
 .bar__act{display:flex;align-items:center;gap:1.5rem}
+/* Echoes the storefront nav — uppercase, tight tracking, ink on cream — in the
+   contest page's own condensed face rather than pulling in proxima-nova. */
 .bar__rules{
   display:inline-flex;align-items:center;min-height:2.75rem;
-  font-size:0.75rem;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;
-  color:var(--n-300);text-decoration:none;
-  border-bottom:1px solid rgba(255,255,255,0.25);
-  transition:color .35s var(--ease),border-color .35s var(--ease);
+  font-family:var(--label);
+  font-size:0.9375rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;background:none;border:0;cursor:pointer;
+  border-bottom:1px solid rgba(18,18,18,0.25);
+  padding:0;
+  transition:border-color .35s var(--ease),opacity .35s var(--ease);
 }
-.bar__rules:hover{color:var(--paper);border-color:var(--paper)}
-.bar__cta{
-  padding:0.7rem 1.1rem;min-height:0;font-size:0.75rem;
-}
-@media(max-width:640px){
-  .bar__rules{display:none}
-}
+.bar__rules:hover{border-bottom-color:var(--ink)}
+.bar__rules:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
 
 /* --------------------------------------------------------------------------
    HERO — the gate sits inside it, so this page is one decision deep
@@ -236,12 +235,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   position:relative;
   background:var(--ink);
   color:var(--paper);
-  margin-top:-4.05rem;
-  /* 7.25rem, not 8rem: the negative margin above pulls the hero under the
-     fixed bar, so this padding is what clears it. 7.25rem still leaves ~50px
-     of air below the bar and buys back the 8px that pushed the "no purchase
-     necessary" badge under the fold on a 1280x800 laptop. */
-  padding-top:7.25rem;
+  /* The negative margin that used to pull the hero up under a transparent bar
+     is gone: the header is opaque cream now, so anything tucked beneath it
+     would simply be hidden. 3.2rem is the gap the old -4.05rem margin and
+     7.25rem padding worked out to, so the space under the bar is unchanged. */
+  padding-top:3.2rem;
   padding-bottom:clamp(3.5rem,7vw,6rem);
   overflow:hidden;
   isolation:isolate;
@@ -533,6 +531,89 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 }
 
 /* --------------------------------------------------------------------------
+   RULES MODAL — a native <dialog>, which is what buys the focus trap, the Esc
+   handler and the inert background for free. Rolling those by hand is where
+   home-made modals usually leak keyboard focus to the page behind them.
+   -------------------------------------------------------------------------- */
+.rules-modal{
+  width:min(58rem,calc(100vw - 4rem));
+  max-height:min(85vh,60rem);
+  padding:0;
+  border:1px solid rgba(10,10,10,0.18);
+  background:var(--paper);
+  color:var(--ink);
+  /* A dialog is display:none until opened; flex only applies once [open] is
+     set, which is what lets the body scroll inside a fixed-height shell. */
+  overflow:hidden;
+}
+.rules-modal[open]{display:flex;flex-direction:column}
+.rules-modal::backdrop{background:rgba(10,10,10,0.72);backdrop-filter:blur(3px)}
+
+.rules-modal__head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;
+  padding:clamp(1.5rem,3vw,2rem);
+  border-bottom:1px solid rgba(10,10,10,0.14);
+  flex:none;
+}
+.rules-modal__title{font-size:clamp(1.35rem,2.4vw,1.75rem);line-height:1.15;letter-spacing:-0.02em}
+.rules-modal__sub{
+  margin-top:0.5rem;font-family:var(--body);font-size:0.9375rem;
+  line-height:1.5;color:var(--n-700);max-width:52ch;
+}
+.rules-modal__x{
+  flex:none;display:inline-flex;align-items:center;justify-content:center;
+  width:2.75rem;height:2.75rem;
+  background:none;border:1px solid rgba(10,10,10,0.2);cursor:pointer;
+  transition:background .3s var(--ease),border-color .3s var(--ease);
+}
+.rules-modal__x svg{width:1.1rem;height:1.1rem;stroke:var(--ink);stroke-width:2;fill:none}
+.rules-modal__x:hover{background:rgba(10,10,10,0.06);border-color:var(--ink)}
+.rules-modal__x:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* The only scrolling region. -webkit-overflow-scrolling keeps momentum on iOS,
+   where a scrollable dialog body otherwise feels stuck. */
+.rules-modal__body{
+  padding:0 clamp(1.5rem,3vw,2rem) clamp(1.5rem,3vw,2rem);
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Accordions carried over from index.html's rules section so the two stay
+   visually identical. */
+.rules{border-top:1px solid rgba(10,10,10,0.14)}
+.rule{border-bottom:1px solid rgba(10,10,10,0.14)}
+.rule summary{
+  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  padding:1.4rem 0;cursor:pointer;list-style:none;
+  font-family:var(--display);font-weight:800;font-size:1.0625rem;letter-spacing:-0.01em;
+}
+.rule summary::-webkit-details-marker{display:none}
+.rule summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.rule__pm{position:relative;width:1rem;height:1rem;flex:none}
+.rule__pm::before,.rule__pm::after{
+  content:"";position:absolute;background:var(--ink);
+  transition:transform .45s var(--ease),opacity .45s var(--ease);
+}
+.rule__pm::before{left:0;top:0.4375rem;width:1rem;height:2px}
+.rule__pm::after{left:0.4375rem;top:0;width:2px;height:1rem}
+.rule[open] .rule__pm::after{transform:rotate(90deg);opacity:0}
+.rule__body{padding:0 0 1.6rem;max-width:68ch}
+.rule__body p{margin:0 0 0.9rem;font-family:var(--body);font-size:0.9375rem;line-height:1.65;color:var(--n-700)}
+.rule__body p:last-child{margin-bottom:0}
+.rule__body b{color:var(--ink);font-weight:600}
+.rule__body a{color:var(--blue);font-weight:600;text-underline-offset:3px}
+
+/* Inline triggers inside body copy have to look like the links they replaced,
+   because that is what they read as in a sentence. */
+.rules-link{
+  background:none;border:0;padding:0;cursor:pointer;
+  font:inherit;color:var(--blue);font-weight:600;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.foot .rules-link{color:inherit;font-weight:inherit}
+.rules-link:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* --------------------------------------------------------------------------
    TBD tokens — every unresolved value from the source docs, made visible
    -------------------------------------------------------------------------- */
 .tbd{
@@ -574,15 +655,14 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 <!-- ======================= STICKY BAR ======================= -->
 <header class="bar" id="bar">
   <div class="bar__in">
-    <a class="bar__mark" href="#top">MAGNUM<span>CONTEST</span></a>
+    <a class="bar__mark" href="#top" aria-label="Magnum Nutraceuticals — back to top">
+      <img class="bar__logo" src="https://cdn.shopify.com/s/files/1/0800/1670/3791/files/magnum_logo_black.png?v=1696281610"
+           alt="Magnum Nutraceuticals" width="150" height="21">
+    </a>
     <div class="bar__act">
-      <a class="bar__rules" href="index.html#rules">Official rules</a>
-      <a class="btn btn--gold bar__cta" href="#gate">
-        Get my link
-        <span class="btn__well" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="square"/></svg>
-        </span>
-      </a>
+      <!-- A <button>, not a link: it opens a dialog on this page rather than
+           navigating. type="button" so it can never submit the gate form. -->
+      <button type="button" class="bar__rules" data-rules>Official rules</button>
     </div>
   </div>
 </header>
@@ -651,7 +731,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
                   <span class="check__t">
                     I confirm that I am a resident of Canada, excluding Quebec, that I have reached
                     the age of majority in my province or territory of residence, and I have read
-                    and agree to the <a href="index.html#rules">Official Contest Rules</a>.
+                    and agree to the <button type="button" class="rules-link" data-rules>Official Contest Rules</button>.
                   </span>
                 </label>
 
@@ -724,7 +804,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
       </div>
       <div class="foot__nav">
         <p>
-          <a href="index.html#rules">Official Contest Rules</a><br>
+          <button type="button" class="rules-link" data-rules>Official Contest Rules</button><br>
           <a href="https://magnumsupps.com/policies/privacy-policy">Privacy Policy</a><br>
           <a href="https://magnumsupps.com">magnumsupps.com</a>
         </p>
@@ -742,21 +822,162 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   </div>
 </footer>
 
+<!-- ======================= RULES MODAL =======================
+     The Official Rules live here, on the gate page, rather than on a page of
+     their own. Reading them no longer routes anyone to index.html, which is
+     the ungated entry form. -->
+<dialog class="rules-modal" id="rulesModal" aria-labelledby="rulesModalTitle">
+  <div class="rules-modal__head">
+    <div>
+      <h2 class="rules-modal__title" id="rulesModalTitle">Official contest rules</h2>
+      <p class="rules-modal__sub">
+        The Official Rules governing this contest are set out in full below.
+        Read them before you enter.
+      </p>
+    </div>
+    <button type="button" class="rules-modal__x" id="rulesClose" aria-label="Close the rules">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="square"/></svg>
+    </button>
+  </div>
+
+  <div class="rules-modal__body">
+    <div class="rules">
+
+      <details class="rule">
+        <summary>1 · Contest period <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>The Contest begins <span class="tbd">[START DATE]</span> at <span class="tbd">[TIME]</span> ET and ends <span class="tbd">[END DATE]</span> at <span class="tbd">[TIME]</span> ET. Entries received outside the Contest Period will not be accepted.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>2 · Who can enter <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>Open only to legal residents of <b>Canada, excluding Quebec</b>, who have reached the age of majority in their province or territory of residence at the time of entry. Void in Quebec and where otherwise prohibited by law.</p>
+          <p>Employees, officers and directors of Magnum Nutraceuticals Inc. and its affiliates and agencies, and their immediate family or household members, are not eligible.</p>
+          <p><b>Limit one entry per person.</b> Multiple entries using multiple email addresses or identities will be disqualified.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>3 · How to enter <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p><b>No purchase necessary.</b> Submit a valid email address, verify it, open the unique link you're sent, and complete this entry form — a proposed name, your rationale, and the other required answers.</p>
+          <p>By submitting an entry you confirm that you are a resident of Canada excluding Quebec, that you have reached the age of majority in your province or territory of residence, and that you have read and agree to the Official Contest Rules. You'll get a confirmation email on successful submission.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>4 · Selection of winner <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>A panel of Magnum Nutraceuticals Inc. representatives judges entries on originality (33.3%), relevance to the product (33.3%) and brand fit (33.3%). Highest combined score wins, at the judges' sole discretion. Decisions are final.</p>
+          <p>This contest is a test of skill and judgment. <b>No random draw or element of chance is used.</b> Ties are broken by a mathematical skill-testing question answered without assistance.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>5 · Prize <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>One (1) winner receives a one-year supply of Magnum Nutraceuticals Inc. protein powder — fourteen (14) two-pound tubs. The winner selects preferred flavour(s) and protein type(s) from the current line, subject to availability; unavailable selections are substituted with comparable products of equal or greater value.</p>
+          <p>Approximate total retail value <b>$1,000 CAD</b>. No cash value, not transferable or redeemable for cash. Magnum reserves the right to substitute a prize of equal or greater value.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>6 · Winner notification <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>The potential winner is notified by email within three (3) business days of selection, at the address given at entry, and must respond within five (5) days, correctly answer the skill-testing question if applicable, and sign and return a Declaration and Intellectual Property Release Form to claim the prize.</p>
+          <p>If the potential winner can't be reached, doesn't respond in time, doesn't return the release, or doesn't meet an eligibility requirement, Magnum may select an alternate winner or not award the prize.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>7 · Use of your submitted name <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>By submitting a name you grant Magnum Nutraceuticals Inc. a perpetual, irrevocable, worldwide, royalty-free licence to use, adapt, modify, register as a trademark and commercially exploit that name and any associated ideas, without further compensation, credit or approval.</p>
+          <p>You confirm your name is original, infringes no third party's rights, and is not obscene or otherwise inappropriate. Magnum may disqualify any entry that breaches this at its sole discretion, and is under no obligation to use any submitted name — including the winning one.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>8 · Publicity and privacy <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>By accepting the prize the winner consents to Magnum using their name, city/province of residence and entry for advertising and promotional purposes related to this contest, in any media, without additional compensation, except where prohibited by law.</p>
+          <p>Personal information is used solely to administer the contest and, where separately consented to, for marketing — in line with Magnum's <a href="https://magnumsupps.com/policies/privacy-policy">Privacy Policy</a>, PIPEDA and provincial privacy law. You can withdraw marketing consent at any time.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>9 · General conditions <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>Magnum may cancel, terminate, modify or suspend the contest if a virus, bug, unauthorized intervention, fraud or other cause beyond its control corrupts the administration, security or proper play of the contest, and may disqualify anyone tampering with the entry process.</p>
+          <p>Magnum is not responsible for lost, late, incomplete, illegible, misdirected or garbled entries, or for technical failures of any kind. By entering you agree to release and hold harmless Magnum Nutraceuticals Inc. and its officers, directors, employees and agents from any liability arising from participation or from acceptance or use of the prize.</p>
+          <p>This contest is governed by the laws of the Province of Ontario and the federal laws of Canada applicable therein.</p>
+        </div>
+      </details>
+
+      <details class="rule">
+        <summary>10 · Questions <span class="rule__pm" aria-hidden="true"></span></summary>
+        <div class="rule__body">
+          <p>Questions about this contest may be directed to <span class="tbd">[CONTACT EMAIL]</span>.</p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</dialog>
+
 <script>
 (function(){
   'use strict';
 
-  /* ---------- Sticky bar ---------- */
-  var bar = document.getElementById('bar');
-  var ticking = false;
-  function onScroll(){
-    bar.classList.toggle('is-stuck', window.scrollY > 40);
-    ticking = false;
+  /* ---------- Rules modal ----------
+     The header no longer changes appearance on scroll — it is opaque cream at
+     rest now, like magnumsupps.com — so the old scroll listener that toggled
+     .is-stuck is gone with it.
+
+     Every "Official Rules" affordance on the page (header button, the one
+     inside the eligibility checkbox, the footer) carries data-rules and opens
+     this same dialog. None of them navigate anywhere. */
+  var rulesModal   = document.getElementById('rulesModal');
+  var rulesClose   = document.getElementById('rulesClose');
+  var rulesOpener  = null;
+
+  function openRules(e){
+    e.preventDefault();
+    rulesOpener = e.currentTarget;
+    if (typeof rulesModal.showModal === 'function'){
+      rulesModal.showModal();
+    } else {
+      /* No <dialog> support: fall back to the plain open attribute so the
+         rules are still readable rather than silently unreachable. */
+      rulesModal.setAttribute('open','');
+    }
+    /* showModal() blocks interaction behind the dialog but does not reliably
+       stop the page itself from scrolling under it. */
+    document.body.style.overflow = 'hidden';
   }
-  window.addEventListener('scroll', function(){
-    if (!ticking){ ticking = true; window.requestAnimationFrame(onScroll); }
-  }, {passive:true});
-  onScroll();
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-rules]'), function(el){
+    el.addEventListener('click', openRules);
+  });
+
+  rulesClose.addEventListener('click', function(){ rulesModal.close(); });
+
+  /* Clicking the backdrop closes. The dialog's own padding is zero and all
+     content sits in child elements, so a target of the dialog itself can only
+     be the area outside the panel. */
+  rulesModal.addEventListener('click', function(e){
+    if (e.target === rulesModal) rulesModal.close();
+  });
+
+  /* Fires for the close button, the backdrop and Esc alike, so scroll release
+     and focus restoration live in one place. */
+  rulesModal.addEventListener('close', function(){
+    document.body.style.overflow = '';
+    if (rulesOpener && typeof rulesOpener.focus === 'function') rulesOpener.focus();
+    rulesOpener = null;
+  });
 
   /* ---------- The gate ---------- */
   var form       = document.getElementById('gateForm');
