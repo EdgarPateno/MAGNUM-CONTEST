@@ -242,57 +242,47 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 /* --------------------------------------------------------------------------
    Sticky bar — inset, hairline appears only after scroll
    -------------------------------------------------------------------------- */
+/* Identical to enter.html's header, so the two pages read as one site: cream
+   at 92% over a 20px blur, hairline bottom border, ~77px band — all copied
+   from magnumsupps.com. Logo and OFFICIAL RULES only; no nav, no icons, and
+   no CTA. The real wordmark is black, so this surface stays light and never
+   goes transparent over the hero the way the old contest bar did. */
 .bar{
   position:sticky;top:0;z-index:30;
-  background:transparent;
-  transition:background .5s var(--ease),border-color .5s var(--ease);
-  border-bottom:1px solid transparent;
-}
-.bar.is-stuck{
-  background:rgba(10,10,10,0.86);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  border-bottom-color:rgba(255,255,255,0.12);
+  background:rgba(249,248,244,0.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(18,18,18,0.08);
 }
 .bar__in{
-  max-width:var(--max);margin:0 auto;
-  padding:0.9rem var(--gut);
+  max-width:none;margin:0 auto;
+  padding:1rem 2rem;
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  min-height:77px;
 }
-.bar__mark{
-  font-family:var(--display);font-weight:900;font-size:1.0625rem;
-  letter-spacing:0.02em;color:var(--paper);text-decoration:none;
-  display:flex;align-items:baseline;gap:0.55rem;
-}
-.bar__mark span{
-  font-family:var(--body);font-size:0.625rem;font-weight:600;
-  letter-spacing:0.2em;color:var(--blue-lift);
+.bar__mark{display:inline-flex;align-items:center;text-decoration:none}
+.bar__logo{display:block;width:auto;height:21px}
+@media(max-width:640px){
+  .bar__logo{height:18px}
 }
 .bar__act{display:flex;align-items:center;gap:1.5rem}
-/* inline-flex + min-height gives this a real tap target. Declared here,
-   before the max-width:640px rule below, so `display:none` still wins on
-   mobile — a later `display` declaration would resurrect it. */
+/* inline-flex + min-height gives this a real tap target. */
 .bar__rules{
   display:inline-flex;align-items:center;min-height:2.75rem;
-  font-size:0.75rem;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;
-  color:var(--n-300);text-decoration:none;
-  border-bottom:1px solid rgba(255,255,255,0.25);
-  transition:color .35s var(--ease),border-color .35s var(--ease);
+  font-family:var(--label);
+  font-size:0.9375rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;background:none;border:0;cursor:pointer;
+  border-bottom:1px solid rgba(18,18,18,0.25);
+  padding:0;
+  transition:border-color .35s var(--ease),opacity .35s var(--ease);
 }
-.bar__rules:hover{color:var(--paper);border-color:var(--paper)}
-.bar__cta{
-  padding:0.7rem 1.1rem;min-height:0;font-size:0.75rem;
-}
-@media(max-width:640px){
-  .bar__rules{display:none}
-}
+.bar__rules:hover{border-bottom-color:var(--ink)}
+.bar__rules:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
 
-/* Scroll progress hairline */
-.bar__prog{
-  position:absolute;left:0;bottom:-1px;height:2px;width:0;
-  background:var(--gold);
-  transition:width .1s linear;
-}
+/* The gold scroll-progress hairline is gone with the old bar: the header is
+   now a straight copy of enter.html's, which has no progress element. Restore
+   this rule, the #prog div and the width update in onScroll together if it is
+   ever wanted back. */
 
 /* --------------------------------------------------------------------------
    HERO
@@ -301,8 +291,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   position:relative;
   background:var(--ink);
   color:var(--paper);
-  margin-top:-4.05rem;
-  padding-top:9rem;
+  /* The -4.05rem margin that tucked the hero under a transparent bar is gone:
+     the header is opaque cream now, so anything beneath it would just be
+     hidden. 4.95rem is what that margin and the old 9rem padding worked out
+     to, so the space under the bar is unchanged. */
+  padding-top:4.95rem;
   padding-bottom:clamp(3.5rem,7vw,6rem);
   overflow:hidden;
   isolation:isolate;
@@ -1013,17 +1006,15 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
 <!-- ======================= STICKY BAR ======================= -->
 <header class="bar" id="bar">
-  <div class="bar__prog" id="prog"></div>
   <div class="bar__in">
-    <a class="bar__mark" href="#top">MAGNUM<span>CONTEST</span></a>
+    <a class="bar__mark" href="#top" aria-label="Magnum Nutraceuticals — back to top">
+      <img class="bar__logo" src="https://cdn.shopify.com/s/files/1/0800/1670/3791/files/magnum_logo_black.png?v=1696281610"
+           alt="Magnum Nutraceuticals" width="150" height="21">
+    </a>
     <div class="bar__act">
+      <!-- Stays an anchor here, unlike enter.html's modal trigger: the rules
+           section is on this page, so this is a real in-page jump. -->
       <a class="bar__rules" href="#rules">Official rules</a>
-      <a class="btn btn--gold bar__cta" href="#entry-form">
-        Enter now
-        <span class="btn__well" aria-hidden="true">
-          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="square"/></svg>
-        </span>
-      </a>
     </div>
   </div>
 </header>
@@ -1633,22 +1624,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- Sticky bar + scroll progress ---------- */
-  var bar  = document.getElementById('bar');
-  var prog = document.getElementById('prog');
-  var ticking = false;
-
-  function onScroll(){
-    var y = window.scrollY;
-    bar.classList.toggle('is-stuck', y > 40);
-    var h = document.documentElement.scrollHeight - window.innerHeight;
-    prog.style.width = (h > 0 ? Math.min(y / h, 1) * 100 : 0) + '%';
-    ticking = false;
-  }
-  window.addEventListener('scroll', function(){
-    if (!ticking){ ticking = true; window.requestAnimationFrame(onScroll); }
-  }, {passive:true});
-  onScroll();
+  /* The sticky-bar scroll handler is gone with the old bar. It did two jobs,
+     and the new header needs neither: it toggled .is-stuck (the header is
+     opaque at rest now, so there is nothing to fade in) and it drove the gold
+     #prog hairline (removed). Leaving it would have thrown on the missing
+     #prog element on the first scroll. */
 
   /* ---------- Scroll reveal ---------- */
   var targets = document.querySelectorAll('.rv, #sources');
