@@ -261,9 +261,18 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 }
 .hero__eyebrow{margin-bottom:clamp(1.75rem,4vw,2.75rem)}
 
-/* Even 50/50 split. The card used to be capped at 28rem to keep the form's
-   checkbox copy at a comfortable measure; now that it takes a full half, that
-   job moves to .check__t's own max-width rather than the column width.
+/* 1.3fr / 1fr, not an even split. The text column has to hold "NEXT PROTEIN"
+   on one line to match index.html's hero, and that line measures 518px at the
+   68px ceiling — roughly 7.6x the font-size at any step of the clamp. An even
+   split left the column at 434-514px between the 980px stacking breakpoint and
+   about 1180px, so the line wrapped there and the title set as five lines
+   instead of four. 1.3fr gives the text ~56.5% of the band, which clears the
+   requirement across that whole range with ~27px to spare at its tightest
+   (981px). The card keeps the rest and is still wider than the 28rem it was
+   capped at before the split existed.
+
+   The card used to be capped at 28rem to keep the form's checkbox copy at a
+   comfortable measure; that job now belongs to .check__t's own max-width.
    Top-aligned: an earlier revision centred this because the title was two short
    lines and centring kept it from stranding at the top of a form-height card.
    The title now runs four lines, so centring pushed the lede under the fold on
@@ -271,7 +280,7 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
    is also what lines the card top up with the eyebrow. */
 .hero__grid{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:1.3fr minmax(0,1fr);
   gap:clamp(2.25rem,5vw,4.5rem);
   align-items:start;
 }
