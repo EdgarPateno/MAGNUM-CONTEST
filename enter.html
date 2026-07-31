@@ -243,12 +243,13 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   overflow:hidden;
   isolation:isolate;
 }
-/* Hero only: drop the side gutter .wrap applies everywhere else, so the 50/50
-   split hands the gate card a full half of the band. Restored below the
-   stacking breakpoint — one column of copy flush to both screen edges is
-   unreadable on a phone. .wrap keeps its 80rem max-width, so past 1280px the
-   hero still centres rather than bleeding to the viewport edges. */
-.hero > .wrap{padding-inline:0}
+/* Hero only: full bleed at every size. Both the side gutter and the 80rem cap
+   that .wrap applies everywhere else are dropped here, so the 50/50 split
+   divides the whole viewport instead of a centred band. The gutter comes back
+   below the stacking breakpoint — one column of copy flush to both screen
+   edges is unreadable on a phone. Everything outside the hero still uses the
+   capped .wrap, so the hero is the deliberate exception, not a new default. */
+.hero > .wrap{max-width:none;padding-inline:0}
 @media(max-width:980px){
   .hero > .wrap{padding-inline:var(--gut)}
 }
@@ -363,6 +364,10 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   counter-increment:step;
   position:relative;
   padding-left:2.6rem;
+  /* Holds the line length once the card goes full-bleed: at 1920 the card is
+     ~924px, which would otherwise run these steps past 90 characters. 62ch
+     keeps the measure where it reads at 1280. */
+  max-width:62ch;
   font-family:var(--body);
   font-size:1rem;
   line-height:1.5;
@@ -455,7 +460,9 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   border:solid var(--paper);border-width:0 2.5px 2.5px 0;
   transform:rotate(45deg);
 }
-.check__t{font-size:0.875rem;line-height:1.55}
+/* max-width for the same reason as .steps li: the card is now half the
+   viewport, and this is the longest copy block in the form. */
+.check__t{font-size:0.875rem;line-height:1.55;max-width:64ch}
 .check__t a{color:var(--blue);font-weight:600;text-underline-offset:3px}
 .check__t small{
   display:block;margin-top:0.35rem;font-size:0.8125rem;color:var(--n-700);
