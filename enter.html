@@ -243,16 +243,14 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   overflow:hidden;
   isolation:isolate;
 }
-/* Hero only: full bleed at every size. Both the side gutter and the 80rem cap
-   that .wrap applies everywhere else are dropped here, so the 50/50 split
-   divides the whole viewport instead of a centred band. The gutter comes back
-   below the stacking breakpoint — one column of copy flush to both screen
-   edges is unreadable on a phone. Everything outside the hero still uses the
-   capped .wrap, so the hero is the deliberate exception, not a new default. */
-.hero > .wrap{max-width:none;padding-inline:0}
-@media(max-width:980px){
-  .hero > .wrap{padding-inline:var(--gut)}
-}
+/* Hero only: full bleed at every size, inset by a flat 2rem. The 80rem cap
+   that .wrap applies everywhere else is dropped here so the 50/50 split
+   divides the whole viewport rather than a centred band; the 2rem replaces
+   .wrap's much larger responsive gutter so the split keeps almost all of that
+   width. One flat value at every breakpoint, so it holds on phones too.
+   Everything outside the hero still uses the capped .wrap — the hero is the
+   deliberate exception, not a new default. */
+.hero > .wrap{max-width:none;padding-inline:2rem}
 .hero::before{
   content:"";position:absolute;inset:0;z-index:-1;
   background:
@@ -281,10 +279,24 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 }
 
 .hero h1{
-  font-size:clamp(2.9rem,7.4vw,6rem);
+  font-size:80px;
   line-height:0.84;
   letter-spacing:-0.045em;
   text-transform:uppercase;
+}
+/* 80px is a wide-desktop value and needs a floor under it. "MAGNUM'S" sets to
+   467px at 80px, and the text column is only half the viewport minus the 2rem
+   inset and the gap, so the column does not clear 467px until roughly 1062px
+   wide. Between the 980px stacking breakpoint and there, a fixed 80px overflows
+   its column and .hero's overflow:hidden silently clips the S. Measured, not
+   guessed: 981px gave a 434px column against a 467px line.
+
+   So the fluid scale governs up to 1070px, which is where the column is safely
+   past 467px. The handover is smooth — 7.4vw is ~79px at that width, so the
+   headline grows into 80px rather than jumping. Below 980 this is also what
+   keeps the full-width single column off a sideways scroll on a phone. */
+@media(max-width:1070px){
+  .hero h1{font-size:clamp(2.9rem,7.4vw,80px)}
 }
 .hero h1 em{
   display:block;
@@ -296,7 +308,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
    at every clamp step. */
 .lede{
   margin-top:clamp(1.25rem,2.6vw,1.9rem);
-  max-width:34ch;
+  /* Sized so the sentence sets as two lines rather than three. It is 84
+     characters, so the measure has to clear ~42ch for the break to land after
+     "your choice of"; 46ch leaves margin for the font loading at slightly
+     different metrics. */
+  max-width:46ch;
   font-family:var(--body);
   font-size:clamp(1.0625rem,1.5vw,1.3125rem);
   font-weight:300;
