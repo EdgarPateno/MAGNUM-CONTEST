@@ -243,6 +243,15 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   overflow:hidden;
   isolation:isolate;
 }
+/* Hero only: drop the side gutter .wrap applies everywhere else, so the 50/50
+   split hands the gate card a full half of the band. Restored below the
+   stacking breakpoint — one column of copy flush to both screen edges is
+   unreadable on a phone. .wrap keeps its 80rem max-width, so past 1280px the
+   hero still centres rather than bleeding to the viewport edges. */
+.hero > .wrap{padding-inline:0}
+@media(max-width:980px){
+  .hero > .wrap{padding-inline:var(--gut)}
+}
 .hero::before{
   content:"";position:absolute;inset:0;z-index:-1;
   background:
@@ -252,15 +261,17 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 }
 .hero__eyebrow{margin-bottom:clamp(1.75rem,4vw,2.75rem)}
 
-/* Text column can breathe; the card is capped so the form never gets wide
-   enough for the checkbox copy to run past a comfortable measure. Top-aligned:
-   an earlier revision centred this because the title was two short lines and
-   centring kept it from stranding at the top of a form-height card. The title
-   now runs four lines, so centring pushed the lede under the fold on a 900px
-   viewport — start-alignment puts the whole text column back above it. */
+/* Even 50/50 split. The card used to be capped at 28rem to keep the form's
+   checkbox copy at a comfortable measure; now that it takes a full half, that
+   job moves to .check__t's own max-width rather than the column width.
+   Top-aligned: an earlier revision centred this because the title was two short
+   lines and centring kept it from stranding at the top of a form-height card.
+   The title now runs four lines, so centring pushed the lede under the fold on
+   a 900px viewport — start-alignment puts the text column back above it, and it
+   is also what lines the card top up with the eyebrow. */
 .hero__grid{
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,28rem);
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:clamp(2.25rem,5vw,4.5rem);
   align-items:start;
 }
@@ -553,11 +564,14 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 <!-- ======================= HERO + GATE ======================= -->
 <section class="hero" id="top">
   <div class="wrap">
-    <p class="eyebrow eyebrow--light hero__eyebrow">Magnum Nutraceuticals · New protein · Contest</p>
-
     <div class="hero__grid">
 
+      <!-- The eyebrow lives INSIDE the text column, not above the grid: with
+           align-items:start that is what puts the top of the gate card on the
+           same line as the eyebrow. -->
       <div>
+        <p class="eyebrow eyebrow--light hero__eyebrow">Magnum Nutraceuticals · New protein · Contest</p>
+
         <h1>Name Magnum&rsquo;s<br>next<em>protein powder</em></h1>
 
         <p class="lede">
