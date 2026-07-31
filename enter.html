@@ -671,7 +671,11 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
       <div>
         <p class="eyebrow eyebrow--light hero__eyebrow">Magnum Nutraceuticals · New protein · Contest</p>
 
-        <h1>Name Magnum&rsquo;s<br>next<em>protein powder</em></h1>
+        <!-- Line breaks mirror index.html's h1 exactly — Name / Magnum's /
+             next protein / powder — so both pages set the title the same way.
+             The <em> is display:block, so it always starts its own line; the
+             break before it is what puts "next protein" together above it. -->
+        <h1>Name<br>Magnum&rsquo;s<br>next protein<em>powder</em></h1>
 
         <p class="lede">
           For a chance to win a year of Magnum protein powder, your choice of type and flavour.
