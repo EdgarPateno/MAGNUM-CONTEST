@@ -514,21 +514,45 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
    Footer
    -------------------------------------------------------------------------- */
 .foot{background:var(--ink);color:var(--n-500);padding-block:clamp(3rem,6vw,4.5rem)}
-.foot__grid{
-  display:flex;flex-wrap:wrap;gap:2rem;
-  align-items:flex-start;justify-content:space-between;
+/* Footer wordmark: the same asset magnumsupps.com uses in its own footer, at
+   the same 180x26 rendering. Theirs sits on a cream footer so the PNG is solid
+   black; this footer is ink, so invert() flips it to white. The file is
+   monochrome on transparency, which is why the inversion is exact — no halo,
+   and no second colourway to keep in sync when the logo changes.
+   line-height:0 stops the inline image from inheriting a text leading gap. */
+.foot__mark{display:inline-block;line-height:0}
+.foot__logo{
+  display:block;width:auto;height:26px;
+  filter:invert(1);
 }
-.foot__mark{
-  font-family:var(--display);font-weight:900;font-size:1.375rem;
-  color:var(--paper);letter-spacing:0.02em;
+@media(max-width:640px){
+  .foot__logo{height:22px}
 }
 .foot p{margin:0.9rem 0 0;font-size:0.8125rem;line-height:1.7;max-width:48ch}
 .foot a{color:var(--n-300);text-underline-offset:3px}
 .foot a:hover{color:var(--paper)}
-.foot__nav a{display:inline-block;padding:0.55rem 0;min-height:2.75rem;line-height:1.6}
-.foot__legal{
-  margin-top:2.5rem;padding-top:1.75rem;
-  border-top:1px solid rgba(255,255,255,0.13);
+/* Two blocks in a row, the way magnumsupps.com lays its footer out: a wider
+   brand block carrying the wordmark, then content blocks beside it. Their
+   first block is 363px of a 1232px row, so the 1fr / 2.4fr split here lands on
+   roughly the same proportion. Stacks below 780px, where two columns would
+   leave the legal at an unreadable measure. */
+.foot__grid{
+  display:grid;
+  grid-template-columns:1fr 2.4fr;
+  gap:clamp(2rem,4vw,3.5rem);
+  align-items:start;
+}
+@media(max-width:780px){
+  .foot__grid{grid-template-columns:1fr;gap:2.25rem}
+}
+/* .foot .foot__legal, not .foot__legal: the generic `.foot p` rule above sets
+   max-width:48ch and outranks a lone class selector, so the column would never
+   govern the measure. none hands that job back to the grid track. */
+.foot .foot__legal{
+  /* Capped inside its column, not by it: the 2.4fr track runs 777px at 1280,
+     which would set this fine print at ~127 characters a line. 76ch keeps it
+     near the 60-80 the rest of the page reads at. */
+  margin:0;max-width:76ch;
   font-size:0.75rem;line-height:1.7;
 }
 
@@ -612,7 +636,6 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   font:inherit;color:var(--blue);font-weight:600;
   text-decoration:underline;text-underline-offset:3px;
 }
-.foot .rules-link{color:inherit;font-weight:inherit}
 .rules-link:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
 /* --------------------------------------------------------------------------
@@ -801,30 +824,24 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 <footer class="foot">
   <div class="wrap">
     <div class="foot__grid">
-      <div>
-        <p class="foot__mark">MAGNUM</p>
-        <p>
-          Sponsor: Magnum Nutraceuticals Inc.<br>
-          Effective date: <span class="tbd">[DATE]</span>
-        </p>
+      <div class="foot__brand">
+        <a class="foot__mark" href="#top" aria-label="Magnum Nutraceuticals — back to top">
+          <img class="foot__logo" src="https://cdn.shopify.com/s/files/1/0800/1670/3791/files/magnum_logo_black.png?v=1696281610"
+               alt="Magnum Nutraceuticals" width="180" height="26">
+        </a>
       </div>
-      <div class="foot__nav">
-        <p>
-          <button type="button" class="rules-link" data-rules>Official Contest Rules</button><br>
-          <a href="https://magnumsupps.com/policies/privacy-policy">Privacy Policy</a><br>
-          <a href="https://magnumsupps.com">magnumsupps.com</a>
-        </p>
-      </div>
-    </div>
 
-    <p class="foot__legal">
+      <div class="foot__block">
+        <p class="foot__legal">
       <b style="color:var(--paper)">No purchase necessary.</b> Contest open to legal residents of Canada, excluding
       Quebec, who have reached the age of majority in their province or territory of residence.
       Void in Quebec and where prohibited. One entry per person. Winner selected by judging on
       skill — no random draw. Approximate retail value of prize: $1,000 CAD. Odds of winning
       depend on the number and quality of eligible entries received. Contest runs
-      <span class="tbd">[START DATE]</span> – <span class="tbd">[END DATE]</span>. Full Official Rules govern.
-    </p>
+          <span class="tbd">[START DATE]</span> – <span class="tbd">[END DATE]</span>. Full Official Rules govern.
+        </p>
+      </div>
+    </div>
   </div>
 </footer>
 
