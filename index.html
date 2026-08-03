@@ -1480,7 +1480,8 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
             <dl>
               <dt>Your name</dt><dd id="cName">—</dd>
               <dt>Quattro</dt><dd id="cQuattro">—</dd>
-              <dt>Entries close</dt><dd><span class="tbd">[END DATE]</span> at <span class="tbd">[TIME]</span> ET</dd>
+              <!-- ET in August is EDT, UTC-4 — not -5. -->
+              <dt>Entries close</dt><dd><time datetime="2026-08-19T23:59:59-04:00">August 19, 2026 at 11:59:59pm ET</time></dd>
             </dl>
           </div>
         </div>
@@ -1618,7 +1619,8 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
       Void in Quebec and where prohibited. One entry per person. Winner selected by judging on
       skill — no random draw. Approximate retail value of prize: $1,000 CAD. Odds of winning
       depend on the number and quality of eligible entries received. Contest runs
-          <span class="tbd">[START DATE]</span> – <span class="tbd">[END DATE]</span>. Full Official Rules govern.
+          <time datetime="2026-08-05T12:00:00-04:00">August 5, 2026 at 12:00:00pm ET</time> –
+          <time datetime="2026-08-19T23:59:59-04:00">August 19, 2026 at 11:59:59pm ET</time>. Full Official Rules govern.
         </p>
       </div>
     </div>
