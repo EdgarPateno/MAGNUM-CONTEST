@@ -895,28 +895,113 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
 .judge__i p{margin:0;font-size:0.9375rem;line-height:1.55;color:var(--n-300)}
 
 /* --------------------------------------------------------------------------
-   RULES / FOOTER
+   RULES MODAL — a native <dialog>, matching enter.html's. The dialog element
+   is what buys the focus trap, the Esc handler and the inert background for
+   free; hand-rolled modals are where keyboard focus leaks to the page behind.
+
+   The accordion styles that used to live here went with the #rules section
+   (5159af0). The rules are a straight read-through document now, not
+   <details> panels — legal copy people are told to read before agreeing to
+   shouldn't be collapsed behind ten clicks.
    -------------------------------------------------------------------------- */
-.rules{margin-top:clamp(2.5rem,5vw,3.5rem);border-top:1px solid rgba(10,10,10,0.14)}
-.rule{border-bottom:1px solid rgba(10,10,10,0.14)}
-.rule summary{
-  display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
-  padding:1.4rem 0;cursor:pointer;list-style:none;
-  font-family:var(--display);font-weight:800;font-size:1.0625rem;letter-spacing:-0.01em;
+.rules-modal{
+  /* 46rem, not the 58rem enter.html uses. That page's accordion summaries span
+     the full shell; this one is a document capped at a 68ch measure, so 58rem
+     left ~290px of empty gutter on the right that read as a layout bug.
+     46rem minus the 2rem body padding lands just about on 68ch. */
+  width:min(46rem,calc(100vw - 4rem));
+  max-height:min(85vh,60rem);
+  padding:0;
+  border:1px solid rgba(10,10,10,0.18);
+  background:var(--paper);
+  color:var(--ink);
+  /* A dialog is display:none until opened; flex only applies once [open] is
+     set, which is what lets the body scroll inside a fixed-height shell. */
+  overflow:hidden;
 }
-.rule summary::-webkit-details-marker{display:none}
-.rule__pm{position:relative;width:1rem;height:1rem;flex:none}
-.rule__pm::before,.rule__pm::after{
-  content:"";position:absolute;background:var(--ink);
-  transition:transform .45s var(--ease),opacity .45s var(--ease);
+.rules-modal[open]{display:flex;flex-direction:column}
+.rules-modal::backdrop{background:rgba(10,10,10,0.72);backdrop-filter:blur(3px)}
+
+.rules-modal__head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;
+  padding:clamp(1.5rem,3vw,2rem);
+  border-bottom:1px solid rgba(10,10,10,0.14);
+  flex:none;
 }
-.rule__pm::before{left:0;top:0.4375rem;width:1rem;height:2px}
-.rule__pm::after{left:0.4375rem;top:0;width:2px;height:1rem}
-.rule[open] .rule__pm::after{transform:rotate(90deg);opacity:0}
-.rule__body{padding:0 0 1.6rem;max-width:68ch}
-.rule__body p{margin:0 0 0.9rem;font-size:0.9375rem;line-height:1.65;color:var(--n-700)}
-.rule__body p:last-child{margin-bottom:0}
-.rule__body b{color:var(--ink);font-weight:600}
+.rules-modal__title{font-size:clamp(1.35rem,2.4vw,1.75rem);line-height:1.15;letter-spacing:-0.02em}
+.rules-modal__sub{
+  margin-top:0.5rem;font-family:var(--body);font-size:0.9375rem;
+  line-height:1.5;color:var(--n-700);max-width:52ch;
+}
+.rules-modal__x{
+  flex:none;display:inline-flex;align-items:center;justify-content:center;
+  width:2.75rem;height:2.75rem;
+  background:none;border:1px solid rgba(10,10,10,0.2);cursor:pointer;
+  transition:background .3s var(--ease),border-color .3s var(--ease);
+}
+.rules-modal__x svg{width:1.1rem;height:1.1rem;stroke:var(--ink);stroke-width:2;fill:none}
+.rules-modal__x:hover{background:rgba(10,10,10,0.06);border-color:var(--ink)}
+.rules-modal__x:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* The only scrolling region. -webkit-overflow-scrolling keeps momentum on iOS,
+   where a scrollable dialog body otherwise feels stuck. */
+.rules-modal__body{
+  padding:0 clamp(1.5rem,3vw,2rem) clamp(1.5rem,3vw,2rem);
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* The rules document itself: headings, paragraphs and lists, set at a legal
+   fine-print rhythm. 68ch is the measure the rest of the page reads at, and
+   the dialog above is sized to it rather than the other way round. */
+.rules-doc{max-width:68ch;padding-top:clamp(1.25rem,2.5vw,1.75rem)}
+.rules-doc__lede{
+  margin:0 0 1.75rem;padding-bottom:1.5rem;
+  border-bottom:1px solid rgba(10,10,10,0.14);
+  font-family:var(--label);font-weight:700;
+  font-size:0.9375rem;letter-spacing:0.06em;text-transform:uppercase;
+  line-height:1.45;color:var(--n-700);
+}
+.rules-doc h3{
+  margin:2rem 0 0.75rem;
+  font-family:var(--display);font-weight:800;
+  font-size:1.0625rem;line-height:1.25;letter-spacing:-0.01em;color:var(--ink);
+}
+.rules-doc h3:first-of-type{margin-top:0}
+.rules-doc p{
+  margin:0 0 0.9rem;
+  font-family:var(--body);font-size:0.9375rem;line-height:1.65;color:var(--n-700);
+}
+.rules-doc p:last-child{margin-bottom:0}
+.rules-doc b{color:var(--ink);font-weight:600}
+.rules-doc a{color:var(--blue);font-weight:600;text-underline-offset:3px}
+/* Numbers stay outside the text block so wrapped lines align to the copy, not
+   to the marker. padding-left carries the hanging indent. */
+.rules-doc ol,.rules-doc ul{margin:0 0 0.9rem;padding-left:1.5rem}
+.rules-doc li{
+  margin-bottom:0.5rem;
+  font-family:var(--body);font-size:0.9375rem;line-height:1.65;color:var(--n-700);
+}
+.rules-doc li:last-child{margin-bottom:0}
+.rules-doc__meta{
+  margin-top:2rem;padding-top:1.25rem;
+  border-top:1px solid rgba(10,10,10,0.14);
+  font-family:var(--label);font-size:0.875rem;letter-spacing:0.04em;
+  text-transform:uppercase;color:var(--n-700);
+}
+
+/* Inline triggers inside body copy have to look like the links they replaced,
+   because that is what they read as in a sentence. */
+.rules-link{
+  background:none;border:0;padding:0;cursor:pointer;
+  font:inherit;color:var(--blue);font-weight:600;
+  text-decoration:underline;text-underline-offset:3px;
+}
+.rules-link:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* --------------------------------------------------------------------------
+   FOOTER
+   -------------------------------------------------------------------------- */
 
 .foot{background:var(--ink);color:var(--n-500);padding-block:clamp(3rem,6vw,4.5rem)}
 /* Footer wordmark: the same asset magnumsupps.com uses in its own footer, at
@@ -1043,9 +1128,10 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
            alt="Magnum Nutraceuticals" width="150" height="21">
     </a>
     <div class="bar__act">
-      <!-- Stays an anchor here, unlike enter.html's modal trigger: the rules
-           section is on this page, so this is a real in-page jump. -->
-      <a class="bar__rules" href="#rules">Official rules</a>
+      <!-- A <button>, not a link, and now matching enter.html: the #rules
+           section this used to jump to was removed in 5159af0, so the anchor
+           was dead. It opens the rules dialog instead. -->
+      <button type="button" class="bar__rules" data-rules>Official rules</button>
     </div>
   </div>
 </header>
@@ -1355,7 +1441,9 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
               By submitting, you confirm that you have reached the age of majority in your
               province or territory of residence, that you are a legal resident of Canada
               excluding Quebec, and that you have read and agree to the
-              <a href="#rules">Official Contest Rules</a>.
+              <!-- MUST stay type="button": this sits inside #entryForm, and a
+                   bare <button> defaults to type="submit". -->
+              <button type="button" class="rules-link" data-rules>Official Contest Rules</button>.
             </p>
 
             <div class="submit-row">
@@ -1537,9 +1625,142 @@ textarea:focus-visible,select:focus-visible,summary:focus-visible{
   </div>
 </footer>
 
+<!-- ======================= RULES MODAL =======================
+     Verbatim from the Official Rules doc
+     (docs.google.com/document/d/1QdKztfxT-VJnWUf8wrGzd6NO5RutszYO). Set as a
+     plain read-through document — headings, paragraphs, one list — not the
+     accordions the removed #rules section used.
+
+     Every "Official Rules" affordance on the page carries data-rules and opens
+     this same dialog: the header button and the one in the entry-form
+     attestation. Neither navigates anywhere.
+
+     This copy is now the newer of the two on the site — enter.html's modal
+     still paraphrases the earlier rules doc and still shows [START DATE] /
+     [END DATE] / [TIME] as TBD. Reconcile the two before launch. -->
+<dialog class="rules-modal" id="rulesModal" aria-labelledby="rulesModalTitle">
+  <div class="rules-modal__head">
+    <div>
+      <h2 class="rules-modal__title" id="rulesModalTitle">&ldquo;Name Our New Protein Powder&rdquo; Contest &mdash; Official Rules</h2>
+      <p class="rules-modal__sub">
+        The Official Rules governing this contest are set out in full below.
+        Read them before you enter.
+      </p>
+    </div>
+    <button type="button" class="rules-modal__x" id="rulesClose" aria-label="Close the rules">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke-linecap="square"/></svg>
+    </button>
+  </div>
+
+  <div class="rules-modal__body">
+    <div class="rules-doc">
+
+      <p class="rules-doc__lede">Magnum Nutraceuticals Inc. &mdash; Name Our New Protein Powder Contest</p>
+
+      <h3>1. Contest Period</h3>
+      <p>The Contest begins on <b>August 5, 2026 at 12:00:00pm ET</b> and ends on <b>August 19, 2026 at 11:59:59pm ET</b> (the &ldquo;Contest Period&rdquo;). Entries received outside the Contest Period will not be accepted.</p>
+
+      <h3>2. Eligibility</h3>
+      <p>The Contest is open only to legal residents of <b>Canada, excluding Quebec</b>, who have reached the age of majority in their province or territory of residence at the time of entry. We will, under no circumstances, accept an entry or collect personal information from any person that we know to be under the age of 18. The Contest is void in Quebec and void where otherwise prohibited by law.</p>
+      <p>Employees, officers, and directors of Magnum Nutraceuticals Inc., and their respective affiliates, agencies, and immediate family members (spouse, parent, sibling, child) or household members of such employees are not eligible to enter.</p>
+      <p><b>Limit one entry per person.</b> Multiple entries from the same individual, using multiple email addresses or identities, will be disqualified.</p>
+
+      <h3>3. How to Enter</h3>
+      <p><b>No purchase necessary.</b> During the Contest Period, eligible entrants may enter by:</p>
+      <ol>
+        <li>Submitting a valid email address at the contest entry page;</li>
+        <li>Verifying that email address;</li>
+        <li>Accessing the landing page via the unique link provided, which presents contest details and formula information about the new product; and</li>
+        <li>Completing and submitting the entry form, which requires a proposed product name, supporting rationale, and answers to any other required questions.</li>
+      </ol>
+      <p>Before submitting an entry, entrants must check a box confirming that they (i) have reached the age of majority in their province or territory of residence, (ii) are a resident of Canada, excluding Quebec, and (iii) have read and agree to these Official Rules. Entries submitted without this confirmation will not be accepted.</p>
+      <p>Entrants may separately opt in or out of marketing communications; doing so has no effect on entry eligibility. Upon successful submission, entrants will receive a confirmation email.</p>
+
+      <h3>4. Selection of Winner</h3>
+      <p>Entries will be judged by a panel of Magnum Nutraceuticals Inc. representatives based on the following criteria: originality (33.3%), relevance to the product (33.3%), and brand fit (33.3%). The entry with the highest combined score, as determined by the judges in their sole discretion, will be selected as the winner. Judges&rsquo; decisions are final. In the event of a tie, tied entrants will be asked to answer a mathematical skill-testing question, without assistance, to determine the winner, as required by Canadian law.</p>
+      <p>This Contest is a test of skill and judgment. <b>No random draw or element of chance is used to select the winner.</b></p>
+
+      <h3>5. Prize</h3>
+      <p>One (1) winner will receive a one (1) year supply of Magnum Nutraceuticals Inc. protein powder, consisting of fourteen (14) two-pound tubs. The winner may select their preferred flavour(s) and protein type(s) from Magnum Nutraceuticals Inc.&rsquo;s current product line, subject to availability. If a selected flavour or product type becomes unavailable, Magnum Nutraceuticals Inc. will substitute a comparable flavour or product type of equal or greater value. Approximate total retail value: <b>$1000 CAD</b>.</p>
+      <p>The prize can be received by mail to the address winner provides. PO boxes are not accepted. Shipping cost will be borne by Magnum Nutraceuticals Inc.</p>
+      <p>The prize has no cash value and is not transferable or redeemable for cash. Magnum Nutraceuticals Inc. reserves the right to substitute the prize with one of equal or greater value if the advertised prize becomes unavailable.</p>
+
+      <h3>6. Winner Notification</h3>
+      <p>The potential winner will be notified by email within three (3) business days of the winner selection using the email address provided at entry. The potential winner must respond within five (5) days of notification, correctly answer the skill-testing question (if applicable per Section 4), and sign and return a Declaration and Intellectual Property Release Form (to be provided by Magnum Nutraceuticals Inc.) confirming eligibility and assigning all rights in the submitted name as described in Section 7, in order to claim the prize. If the potential winner cannot be reached, fails to respond within the required time, fails to sign and return the required release, or fails to meet any eligibility requirement, Magnum Nutraceuticals Inc. reserves the right to select an alternate winner from the remaining eligible entries, or to not award the prize.</p>
+
+      <h3>7. Use of Submitted Name / Intellectual Property</h3>
+      <p>By submitting a name, each entrant grants Magnum Nutraceuticals Inc. a perpetual, irrevocable, worldwide, royalty-free right and license to use, adapt, modify, register as a trademark, and commercially exploit the submitted name and any associated ideas, in connection with the product and Magnum&rsquo;s business, without further compensation, credit, or approval from the entrant.</p>
+      <p>Entrants represent and warrant that their submitted name is original, does not infringe any third party&rsquo;s intellectual property or other rights, and is not obscene, offensive, or otherwise inappropriate. Magnum Nutraceuticals Inc. reserves the right to disqualify any entry that it determines, in its sole discretion, violates this section.</p>
+      <p>Magnum Nutraceuticals Inc. is under no obligation to use any submitted name, including the winning entry, in connection with the final product.</p>
+
+      <h3>8. Publicity</h3>
+      <p>By accepting the prize, the winner consents, without further compensation, to the use of their name, city/province of residence, and entry (but not other personal information) by Magnum Nutraceuticals Inc. for advertising and promotional purposes related to this Contest, in any media, without additional compensation, except where prohibited by law.</p>
+
+      <h3>9. Privacy</h3>
+      <p>Personal information collected in connection with this Contest will be used solely for the purpose of administering the Contest and, where separately consented to, for marketing communications, in accordance with Magnum Nutraceuticals Inc.&rsquo;s <a href="https://magnumsupps.com/policies/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a> and applicable Canadian privacy law (PIPEDA and provincial equivalents). Entrants may withdraw marketing consent at any time.</p>
+
+      <h3>10. General Conditions</h3>
+      <p>Magnum Nutraceuticals Inc. reserves the right, in its sole discretion, to cancel, terminate, modify, or suspend the Contest should a virus, bug, non-authorized human intervention, fraud, or other cause beyond its control corrupt the administration, security, or proper play of the Contest. Magnum Nutraceuticals Inc. reserves the right to disqualify any individual found to be tampering with the entry process.</p>
+      <p>Magnum Nutraceuticals Inc. is not responsible for lost, late, incomplete, illegible, misdirected, or garbled entries, or for any technical failures of any kind.</p>
+      <p>By entering, participants agree to release and hold harmless Magnum Nutraceuticals Inc. and their respective officers, directors, employees, and agents from any liability arising from participation in the Contest or acceptance/use of the prize.</p>
+      <p>This Contest is governed by the laws of the Province of Ontario and the federal laws of Canada applicable therein.</p>
+
+      <h3>11. Contact</h3>
+      <p>Questions about this Contest may be directed to <span class="tbd">[CONTACT EMAIL]</span>.</p>
+
+      <p class="rules-doc__meta">Effective date: August 5, 2026 &middot; Sponsor: Magnum Nutraceuticals Inc.</p>
+
+    </div>
+  </div>
+</dialog>
+
 <script>
 (function(){
   'use strict';
+
+  /* ---------- Rules modal ----------
+     Ported from enter.html so the two pages behave identically. */
+  var rulesModal  = document.getElementById('rulesModal');
+  var rulesClose  = document.getElementById('rulesClose');
+  var rulesOpener = null;
+
+  function openRules(e){
+    e.preventDefault();
+    rulesOpener = e.currentTarget;
+    if (typeof rulesModal.showModal === 'function'){
+      rulesModal.showModal();
+    } else {
+      /* No <dialog> support: fall back to the plain open attribute so the
+         rules are still readable rather than silently unreachable. */
+      rulesModal.setAttribute('open','');
+    }
+    /* showModal() blocks interaction behind the dialog but does not reliably
+       stop the page itself from scrolling under it. */
+    document.body.style.overflow = 'hidden';
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-rules]'), function(el){
+    el.addEventListener('click', openRules);
+  });
+
+  rulesClose.addEventListener('click', function(){ rulesModal.close(); });
+
+  /* Clicking the backdrop closes. The dialog's own padding is zero and all
+     content sits in child elements, so a target of the dialog itself can only
+     be the area outside the panel. */
+  rulesModal.addEventListener('click', function(e){
+    if (e.target === rulesModal) rulesModal.close();
+  });
+
+  /* Fires for the close button, the backdrop and Esc alike, so scroll release
+     and focus restoration live in one place. Note the close event is async —
+     reading document.activeElement in the same tick as .close() shows the
+     pre-close element and looks like broken focus restoration. */
+  rulesModal.addEventListener('close', function(){
+    document.body.style.overflow = '';
+    if (rulesOpener && typeof rulesOpener.focus === 'function') rulesOpener.focus();
+    rulesOpener = null;
+  });
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
